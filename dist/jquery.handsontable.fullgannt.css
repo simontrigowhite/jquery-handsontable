@@ -57,19 +57,27 @@
   width: 50px;
 }
 
-.handsontable th,
-.handsontable td {
+.handsontable th {
   border-right: 1px solid #CCC;
   border-bottom: 1px solid #CCC;
-  height: 22px;
-  empty-cells: show;
+  height: 43px;
   line-height: 21px;
   padding: 0 4px 0 4px; /* top, bottom padding different than 0 is handled poorly by FF with HTML5 doctype */
   background-color: #FFF;
   font-size: 12px;
   vertical-align: top;
   overflow: hidden;
-  outline-width: 0;
+}
+
+.handsontable td {
+  border-right: 1px solid #CCC;
+  border-bottom: 1px solid #CCC;
+  line-height: 20px;
+  padding: 0 4px 0 4px; /* top, bottom padding different than 0 is handled poorly by FF with HTML5 doctype */
+  background-color: #FFF;
+  font-size: 13px;
+  vertical-align: top;
+  overflow: hidden;
 }
 
 .handsontable th:last-child {
