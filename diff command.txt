@@ -1,0 +1,4 @@
+v0.8.21: 1e5a8f262e29e122afc25f365ed7aa71333fc4aa
+v0.10.0: cbb694253e71d19deae32743df9f3edc997e73ea
+
+git diff 1e5a8f262e29e122afc25f365ed7aa71333fc4aa cbb694253e71d19deae32743df9f3edc997e73ea dist/jquery.handsontable.full.js
