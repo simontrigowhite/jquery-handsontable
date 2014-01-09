@@ -71,7 +71,6 @@
   background-color: #FFF;
   vertical-align: top;
   overflow: hidden;
-<<<<<<< HEAD
   outline-width: 0;
   white-space: pre-line;
   /* preserve new line character in cell */
@@ -81,7 +80,6 @@
   -webkit-transition: background 0.75s ease;
   transition: background 0.75s ease;
   background-color: #ff4c42;
-=======
 }
 
 .handsontable td {
@@ -93,7 +91,9 @@
   font-size: 13px;
   vertical-align: top;
   overflow: hidden;
->>>>>>> origin/AgChanges2
+  outline-width: 0;
+  white-space: pre-line;
+  /* preserve new line character in cell */
 }
 
 .handsontable th:last-child {

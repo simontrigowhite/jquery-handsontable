@@ -10,7 +10,7 @@
  */
 /*jslint white: true, browser: true, plusplus: true, indent: 4, maxerr: 50 */
 
-// changed by Abhishek
+// WB change - add block
 /*****************************************/
 var selectkey = 0;
 var ispopup = 0;
@@ -58,6 +58,8 @@ var Handsontable = { //class namespace
   helper: {} //helper namespace
 };
 
+// WB change - add block
+/*****************************************/
 function displayCheckedRisk() {
     countrow = 0, SelectedRisk = "";
     for (var counter = 0; counter < riskNameList.length; counter++) {
@@ -86,6 +88,7 @@ function displayCheckedRisk() {
     else
         $('#Showselectedrisk').text("");
 }
+/*****************************************/
 
 (function ($, window, Handsontable) {
   "use strict";
@@ -1338,7 +1341,7 @@ Handsontable.Core = function (rootElement, userSettings) {
       }, false);
     },
 
-    // changed by Abhishek
+    // WB change - add block
     /*****************************************/
     selectColumn: function (colIndex) {
         if (!priv.settings.multiSelect) {
@@ -1639,7 +1642,6 @@ Handsontable.Core = function (rootElement, userSettings) {
           }
         }
 
-<<<<<<< HEAD
         if (instance.getCellValidator(cellProperties)) {
           waitingForValidator.addValidatorToQueue();
           instance.validateCell(changes[i][3], cellProperties, (function (i, cellProperties) {
@@ -1656,320 +1658,6 @@ Handsontable.Core = function (rootElement, userSettings) {
             }
           })(i, cellProperties)
             , source);
-=======
-        priv.lastKeyCode = event.keyCode;
-        if (selection.isSelected()) {
-          var ctrlDown = (event.ctrlKey || event.metaKey) && !event.altKey; //catch CTRL but not right ALT (which in some systems triggers ALT+CTRL)
-          if (Handsontable.helper.isPrintableChar(event.keyCode) && ctrlDown) {
-            if (event.keyCode === 65) { //CTRL + A
-              selection.selectAll(); //select all cells
-              editproxy.setCopyableText();
-              event.preventDefault();
-            }
-            else if (event.keyCode === 89 || (event.shiftKey && event.keyCode === 90)) { //CTRL + Y or CTRL + SHIFT + Z
-              priv.undoRedo && priv.undoRedo.redo();
-            }
-            else if (event.keyCode === 90) { //CTRL + Z
-              priv.undoRedo && priv.undoRedo.undo();
-            }
-            return;
-          }
-
-          var rangeModifier = event.shiftKey ? selection.setRangeEnd : selection.setRangeStart;
-
-          switch (event.keyCode) {
-            case 38: /* arrow up */
-              // changed by Abhishek                                                                                                                                                                                                                                                                                                                   
-              /*****************************************/
-              if (event.ctrlKey) {
-                  rangeModifier({ row: 0, col: priv.selStart.col() });
-              } else if (event.shiftKey) {
-                  if (selectkey == 1) {
-                      selectkey = 0;
-                      selection.transformEnd(-self.countRows(), 0);
-                  } else {
-                      selection.transformEnd(-1, 0);
-                  }
-              } else {
-                  if (selectkey == 1) {
-                      selectkey = 0;
-                      selection.transformStart(-self.countRows(), 0);
-                  } else {
-                      selection.transformStart(-1, 0);
-                  }
-              }
-              /*****************************************/
-              event.preventDefault();
-              event.stopPropagation(); //required by HandsontableEditor
-              break;
-
-            case 9: /* tab */
-              var tabMoves = typeof priv.settings.tabMoves === 'function' ? priv.settings.tabMoves(event) : priv.settings.tabMoves;
-              if (event.shiftKey) {
-                selection.transformStart(-tabMoves.row, -tabMoves.col); //move selection left
-              }
-              else {
-                selection.transformStart(tabMoves.row, tabMoves.col, true); //move selection right (add a new column if needed)
-              }
-              event.preventDefault();
-              event.stopPropagation(); //required by HandsontableEditor
-              break;
-
-            case 39: /* arrow right */
-              // changed by Abhishek
-              /*****************************************/
-              if (event.ctrlKey) {
-                  rangeModifier({ row: priv.selStart.row(), col: self.countCols() - 1 });
-              } else if (event.shiftKey) {
-                  if (selectkey == 1) {
-                      selectkey = 0;
-                      selection.transformEnd(0, self.countCols() - 1);
-                  } else {
-                      selection.transformEnd(0, 1);
-                  }
-              } else {
-                  if (selectkey == 1) {
-                      selectkey = 0;
-                      selection.transformStart(0, self.countCols() - 1);
-                  } else {
-                      selection.transformStart(0, 1);
-                  }
-              }
-              /*****************************************/
-              event.preventDefault();
-              event.stopPropagation(); //required by HandsontableEditor
-              break;
-
-            case 37: /* arrow left */
-              // changed by Abhishek
-              /*****************************************/
-              if (event.ctrlKey) {
-                  rangeModifier({ row: priv.selStart.row(), col: 0 });
-              } else if (event.shiftKey) {
-                  if (selectkey == 1) {
-                    selectkey = 0;
-                      selection.transformEnd(0, -self.countCols());
-                  } else {
-                      selection.transformEnd(0, -1);
-                  }
-              } else {
-                  if (selectkey == 1) {
-                      selectkey = 0;
-                      selection.transformStart(0, -self.countCols());
-                  } else {
-                      selection.transformStart(0, -1);
-                  }
-              }
-              /*****************************************/
-              event.preventDefault();
-              event.stopPropagation(); //required by HandsontableEditor
-              break;
-
-            case 8: /* backspace */
-            case 46: /* delete */
-              selection.empty(event);
-              event.preventDefault();
-              break;
-
-            case 40: /* arrow down */
-              // changed by Abhishek
-              /*****************************************/
-              if (event.ctrlKey) {
-                  rangeModifier({ row: self.countRows() - 2, col: priv.selStart.col() });
-              } else if (event.shiftKey) {
-                  if (selectkey == 1) {
-                      selectkey = 0;
-                      selection.transformEnd(self.countRows(), 0); //expanding selection down with shift
-                  } else {
-                      selection.transformEnd(1, 0); //expanding selection down with shift
-                  }
-              } else {
-                  if (selectkey == 1) {
-                      selectkey = 0;
-                      selection.transformStart(self.countRows(), 0); //move selection down
-                  } else {
-                      selection.transformStart(1, 0); //move selection down
-                  }
-              }
-              /*****************************************/
-              event.preventDefault();
-              event.stopPropagation(); //required by HandsontableEditor
-              break;
-
-            case 113: /* F2 */
-              event.preventDefault(); //prevent Opera from opening Go to Page dialog
-              break;
-
-            case 13: /* return/enter */
-              var enterMoves = typeof priv.settings.enterMoves === 'function' ? priv.settings.enterMoves(event) : priv.settings.enterMoves;
-              if (event.shiftKey) {
-                selection.transformStart(-enterMoves.row, -enterMoves.col); //move selection up
-              }
-              else {
-                selection.transformStart(enterMoves.row, enterMoves.col, true); //move selection down (add a new row if needed)
-              }
-              event.preventDefault(); //don't add newline to field
-              break;
-
-            case 36: /* home */
-              if (event.ctrlKey || event.metaKey) {
-                rangeModifier({row: 0, col: priv.selStart.col()});
-              }
-              else {
-                rangeModifier({row: priv.selStart.row(), col: 0});
-              }
-              event.preventDefault(); //don't scroll the window
-              event.stopPropagation(); //required by HandsontableEditor
-              break;
-
-            case 35: /* end */
-              if (event.ctrlKey || event.metaKey) {
-                rangeModifier({row: self.countRows() - 1, col: priv.selStart.col()});
-              }
-              else {
-                rangeModifier({row: priv.selStart.row(), col: self.countCols() - 1});
-              }
-              event.preventDefault(); //don't scroll the window
-              event.stopPropagation(); //required by HandsontableEditor
-              break;
-
-            case 33: /* pg up */
-              // changed by Abhishek
-              /*****************************************/
-              var rowrange = self.countVisibleRows() - 2;
-              if (event.shiftKey) {
-                  selection.transformEnd(-rowrange, 0); //expanding selection down with shift
-              } else {
-                  selection.transformStart(-rowrange, 0); //move selection down
-                  event.preventDefault();
-              }
-
-              /*****************************************/
-              event.preventDefault(); //don't page up the window
-              event.stopPropagation(); //required by HandsontableEditor
-              break;
-                    
-            case 34: /* pg down */
-              // changed by Abhishek
-              /*****************************************/
-              var rowrange = self.countVisibleRows() - 2;
-              if (event.shiftKey) {
-                  selection.transformEnd(rowrange, 0); //expanding selection down with shift
-              } else {
-                  selection.transformStart(rowrange, 0); //move selection down
-                  event.preventDefault();
-              }
-
-              /*****************************************/
-              event.preventDefault(); //don't page down the window
-              event.stopPropagation(); //required by HandsontableEditor
-              break;
-
-            default:
-              break;
-          }
-        }
-      }
-
-      self.copyPaste = new CopyPaste(self.rootElement[0]);
-      self.copyPaste.onCut(onCut);
-      self.copyPaste.onPaste(onPaste);
-      self.rootElement.on('keydown.handsontable.' + self.guid, onKeyDown);
-    },
-
-    /**
-     * Destroy current editor, if exists
-     * @param {Boolean} revertOriginal
-     */
-    destroy: function (revertOriginal) {
-      if (typeof priv.editorDestroyer === "function") {
-        var destroyer = priv.editorDestroyer; //this copy is needed, otherwise destroyer can enter an infinite loop
-        priv.editorDestroyer = null;
-        destroyer(revertOriginal);
-      }
-    },
-
-    /**
-     * Prepares copyable text in the invisible textarea
-     */
-    setCopyableText: function () {
-      var startRow = Math.min(priv.selStart.row(), priv.selEnd.row());
-      var startCol = Math.min(priv.selStart.col(), priv.selEnd.col());
-      var endRow = Math.max(priv.selStart.row(), priv.selEnd.row());
-      var endCol = Math.max(priv.selStart.col(), priv.selEnd.col());
-      var finalEndRow = Math.min(endRow, startRow + priv.settings.copyRowsLimit - 1);
-      var finalEndCol = Math.min(endCol, startCol + priv.settings.copyColsLimit - 1);
-
-      self.copyPaste.copyable(datamap.getText({row: startRow, col: startCol}, {row: finalEndRow, col: finalEndCol}));
-
-      if ((endRow !== finalEndRow || endCol !== finalEndCol) && priv.settings.onCopyLimit) {
-        priv.settings.onCopyLimit(endRow - startRow + 1, endCol - startCol + 1, priv.settings.copyRowsLimit, priv.settings.copyColsLimit);
-      }
-    },
-
-    /**
-     * Prepare text input to be displayed at given grid cell
-     */
-    prepare: function () {
-      if (!self.getCellMeta(priv.selStart.row(), priv.selStart.col()).isWritable) {
-        return;
-      }
-
-      self.listen();
-      var TD = self.view.getCellAtCoords(priv.selStart.coords());
-      priv.editorDestroyer = self.view.applyCellTypeMethod('editor', TD, priv.selStart.row(), priv.selStart.col());
-      //presumably TD can be removed from here. Cell editor should also listen for changes if editable cell is outside from viewport
-    }
-  };
-
-  this.init = function () {
-    Handsontable.PluginHooks.run(self, 'beforeInit');
-    editproxy.init();
-
-    bindEvents();
-    this.updateSettings(settings);
-    this.parseSettingsFromDOM();
-    this.focusCatcher = new Handsontable.FocusCatcher(this);
-    this.view = new Handsontable.TableView(this);
-
-    this.forceFullRender = true; //used when data was changed
-    this.view.render();
-
-    if (typeof priv.firstRun === 'object') {
-      fireEvent('datachange.handsontable', priv.firstRun);
-      priv.firstRun = false;
-    }
-    Handsontable.PluginHooks.run(self, 'afterInit');
-  };
-
-  function validateChanges(changes, source) {
-    var validated = $.Deferred();
-    var deferreds = [];
-
-    //validate strict autocompletes
-    var process = function (i) {
-      var deferred = $.Deferred();
-      deferreds.push(deferred);
-
-      var originalVal = changes[i][3];
-      var lowercaseVal = typeof originalVal === 'string' ? originalVal.toLowerCase() : null;
-
-      return function (source) {
-        var found = false;
-        for (var s = 0, slen = source.length; s < slen; s++) {
-          if (originalVal === source[s]) {
-            found = true; //perfect match
-            break;
-          }
-          else if (lowercaseVal === source[s].toLowerCase()) {
-            changes[i][3] = source[s]; //good match, fix the case
-            found = true;
-            break;
-          }
-        }
-        if (!found) {
-          changes[i] = null;
->>>>>>> origin/AgChanges2
         }
       }
     }
@@ -1995,204 +1683,6 @@ Handsontable.Core = function (rootElement, userSettings) {
     }
   }
 
-<<<<<<< HEAD
-=======
-  var fireEvent = function (name, params) {
-    self.rootElement.triggerHandler(name, params);
-  };
-
-  function emptyElement(element) {
-      //Removes nulls, zeros (also falses), text version of false, and blank element
-      if (element == '')
-          return false;
-      else return true;
-  }
-    
-  var bindEvents = function () {
-    self.rootElement.on("datachange.handsontable", function (event, changes, source) {
-        if (priv.settings.afterChange) {
-            priv.settings.afterChange.apply(self.rootElement[0], [changes, source]);
-            // changed by Abhishek
-            /*****************************************/
-            //  TableheaderClick();
-            if (changes != null) {
-                var checknew = 1;
-                for (var i = 0; i < $("#RenderedTable").handsontable("getData").length; i++) {
-                    checknew = 1;
-                    for (var j = 0; j < idList.length; j++) {
-                        if ($("#RenderedTable").handsontable("getData")[i]['Id'] == idList[j]) {
-                            checknew = 0;
-                            if ($("#RenderedTable").handsontable("getData")[i]['Name'] != undefined)
-                                riskNameList[j] = $("#RenderedTable").handsontable("getData")[i]['Name'];
-                            else
-                                riskNameList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['Category'] != undefined)
-                                categoryList[j] = $("#RenderedTable").handsontable("getData")[i]['Category'];
-                            else
-                                categoryList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['Causes'] != undefined)
-                                CausesList[j] = $("#RenderedTable").handsontable("getData")[i]['Causes'];
-                            else
-                                CausesList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['Effects'] != undefined)
-                                EffectsList[j] = $("#RenderedTable").handsontable("getData")[i]['Effects'];
-                            else
-                                EffectsList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['PlannedMitigation'] != undefined)
-                                PlannedMitigationList[j] = $("#RenderedTable").handsontable("getData")[i]['PlannedMitigation'];
-                            else
-                                PlannedMitigationList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['ProbabilityScore'] != undefined)
-                                ProbabilityScoreList[j] = $("#RenderedTable").handsontable("getData")[i]['ProbabilityScore'];
-                            else
-                                ProbabilityScoreList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['ScheduleImpactScore'] != undefined)
-                                ScheduleImpactScoreList[j] = $("#RenderedTable").handsontable("getData")[i]['ScheduleImpactScore'];
-                            else
-                                ScheduleImpactScoreList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['Scorecurrent'] != undefined)
-                                ScorecurrentList[j] = $("#RenderedTable").handsontable("getData")[i]['Scorecurrent'];
-                            else
-                                ScorecurrentList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['ProposedMitigation'] != undefined)
-                                ProposedMitigationList[j] = $("#RenderedTable").handsontable("getData")[i]['ProposedMitigation'];
-                            else
-                                ProposedMitigationList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['ProbabilityScorePost'] != undefined)
-                                ProbabilityScorePostList[j] = $("#RenderedTable").handsontable("getData")[i]['ProbabilityScorePost'];
-                            else
-                                ProbabilityScorePostList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['ScheduleImpactScorePost'] != undefined)
-                                ScheduleImpactScorePostList[j] = $("#RenderedTable").handsontable("getData")[i]['ScheduleImpactScorePost'];
-                            else
-                                ScheduleImpactScorePostList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['ScorePost'] != undefined)
-                                ScorePostList[j] = $("#RenderedTable").handsontable("getData")[i]['ScorePost'];
-                            else
-                                ScorePostList[j] = "";
-                            if ($("#RenderedTable").handsontable("getData")[i]['Owner'] != undefined)
-                                OwnerList[j] = $("#RenderedTable").handsontable("getData")[i]['Owner'];
-                            else
-                                OwnerList[j] = "";
-                            break;
-                        }
-                    }
-                    if (checknew == 1) {
-                        if (idList.length > 0) {
-                            var jsonlength = $("#RenderedTable").handsontable("getData").length;
-                            debugger;
-                            //$("#RenderedTable").handsontable("getData")[jsonlength - 2]['Id'] = idList[idList.length - 1];
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Name'] == null) {
-                                riskNameList[idList.length - 1] = " ";
-                            } else {
-                                riskNameList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Name'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Category'] == null) {
-                                categoryList[idList.length - 1] = " ";
-                            } else {
-                                categoryList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Category'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Causes'] == null) {
-                                CausesList[idList.length - 1] = " ";
-                            } else {
-                                CausesList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Causes'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Effects'] == null) {
-                                EffectsList[idList.length - 1] = " ";
-                            } else {
-                                EffectsList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Effects'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['PlannedMitigation'] == null) {
-                                PlannedMitigationList[idList.length - 1] = " ";
-                            } else {
-                                PlannedMitigationList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['PlannedMitigation'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProbabilityScore'] == null) {
-                                ProbabilityScoreList[idList.length - 1] = " ";
-                            } else {
-                                ProbabilityScoreList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProbabilityScore'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScheduleImpactScore'] == null) {
-                                ScheduleImpactScoreList[idList.length - 1] = " ";
-                            } else {
-                                ScheduleImpactScoreList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScheduleImpactScore'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Scorecurrent'] == null) {
-                                ScorecurrentList[idList.length - 1] = " ";
-                            } else {
-                                ScorecurrentList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Scorecurrent'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProposedMitigation'] == null) {
-                                ProposedMitigationList[idList.length - 1] = " ";
-                            } else {
-                                ProposedMitigationList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProposedMitigation'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProbabilityScorePost'] == null) {
-                                ProbabilityScorePostList[idList.length - 1] = " ";
-                            } else {
-                                ProbabilityScorePostList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProbabilityScorePost'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScheduleImpactScorePost'] == null) {
-                                ScheduleImpactScorePostList[idList.length - 1] = " ";
-                            } else {
-                                ScheduleImpactScorePostList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScheduleImpactScorePost'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScorePost'] == null) {
-                                ScorePostList[idList.length - 1] = " ";
-                            } else {
-                                ScorePostList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScorePost'];
-                            }
-                            if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Owner'] == null) {
-                                OwnerList[idList.length - 1] = " ";
-                            } else {
-                                OwnerList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Owner'];
-                            }
-                        }
-                    }
-
-                }
-
-                // json_text = JSON.stringify($("#RenderedTable").handsontable("getData"));
-                // alert(json_text);
-                if (changes[0][1] == "isActive") {
-
-                    var id = jQuery.parseJSON(json_text)[changes[0][0]]['Id'];
-                    if (id != " ") {
-                        for (var tempCount = 0; tempCount < idList.length; tempCount++) {
-                            if (idList[tempCount] == id) {
-                                indexList[tempCount] = changes[0][3];
-                            }
-                        }
-                    }
-                    displayCheckedRisk();
-                }
-            }
-            /*****************************************/
-      }
-    });
-    self.rootElement.on("selection.handsontable", function (event, row, col, endRow, endCol) {
-      if (priv.settings.onSelection) {
-        priv.settings.onSelection.apply(self.rootElement[0], [row, col, endRow, endCol]);
-      }
-    });
-    self.rootElement.on("selectionbyprop.handsontable", function (event, row, prop, endRow, endProp) {
-      if (priv.settings.onSelectionByProp) {
-        priv.settings.onSelectionByProp.apply(self.rootElement[0], [row, prop, endRow, endProp]);
-      }
-    });
-    self.rootElement.on("selectionend.handsontable", function (event, row, col, endRow, endCol) {
-      if (priv.settings.onSelectionEnd) {
-        priv.settings.onSelectionEnd.apply(self.rootElement[0], [row, col, endRow, endCol]);
-      }
-    });
-    self.rootElement.on("selectionendbyprop.handsontable", function (event, row, prop, endRow, endProp) {
-      if (priv.settings.onSelectionEndByProp) {
-        priv.settings.onSelectionEndByProp.apply(self.rootElement[0], [row, prop, endRow, endProp]);
-      }
-    });
-  };
-
->>>>>>> origin/AgChanges2
   /**
    * Internal function to apply changes. Called after validateChanges
    * @param {Array} changes Array in form of [row, prop, oldValue, newValue]
@@ -2297,18 +1787,15 @@ Handsontable.Core = function (rootElement, userSettings) {
       , prop;
 
     for (i = 0, ilen = input.length; i < ilen; i++) {
-<<<<<<< HEAD
       if (typeof input[i] !== 'object') {
         throw new Error('Method `setDataAtCell` accepts row number or changes array of arrays as its first parameter');
       }
-=======
-      /*
->>>>>>> origin/AgChanges2
+      // WB change - AG had removed this block, try fix
+      //*******************************
       if (typeof input[i][1] !== 'number') {
         throw new Error('Method `setDataAtCell` accepts row and column number as its parameters. If you want to use object property name, use method `setDataAtRowProp`');
-      }
-      */
-      prop = datamap.colToProp(input[i][1]);
+      } prop = datamap.colToProp(input[i][1]);
+      //*******************************
       changes.push([
         input[i][0],
         prop,
@@ -2455,14 +1942,13 @@ Handsontable.Core = function (rootElement, userSettings) {
     }
   };
 
-  // changed by Abhishek
+  // WB change - add block - try fix
   /*****************************************/
-  this.getSelectedcellrow = function () { //https://github.com/warpech/jquery-handsontable/issues/44  //cjl  
-      var coords = grid.getCornerCoords([priv.selStart.coords(), priv.selEnd.coords()]);
-      return [coords.TL.row, coords.TL.col, coords.BR.row, coords.BR.col];
+  //this.getSelectedcellrow = function () { //https://github.com/warpech/jquery-handsontable/issues/44  //cjl  
+  //    var coords = grid.getCornerCoords([priv.selStart.coords(), priv.selEnd.coords()]);
+  //    return [coords.TL.row, coords.TL.col, coords.BR.row, coords.BR.col];
 
-  };
-
+  //};
   /*****************************************/
     
   /**
@@ -3305,7 +2791,7 @@ Handsontable.Core = function (rootElement, userSettings) {
     return true;
   };
 
-  // changed by Abhishek
+  // WB change - add block
   /*****************************************/
   this.selectAllCells = function (columnIndex) {
       selection.selectColumn(columnIndex);
@@ -3556,16 +3042,14 @@ Handsontable.TableView = function (instance) {
 
   var table = document.createElement('TABLE');
   table.className = 'htCore';
-<<<<<<< HEAD
+
+  // WB change - added line
+  table.setAttribute('id', 'filtert');
+
   this.THEAD = document.createElement('THEAD');
   table.appendChild(this.THEAD);
   this.TBODY = document.createElement('TBODY');
   table.appendChild(this.TBODY);
-=======
-  table.setAttribute('id', 'filtert'); // changed by Abhishek    
-  table.appendChild(document.createElement('THEAD'));
-  table.appendChild(document.createElement('TBODY'));
->>>>>>> origin/AgChanges2
 
   instance.$table = $(table);
   instance.rootElement.prepend(instance.$table);
@@ -3920,24 +3404,24 @@ Handsontable.TableView.prototype.appendRowHeader = function (row, TH) {
  * @param TH
  */
 Handsontable.TableView.prototype.appendColHeader = function (col, TH) {
-  // changed by Abhishek
+  // WB change - was SPAN = document.createElement('SPAN')
   /*****************************************/
   var DIV = document.createElement('DIV')
-    , SPAN = document.createElement('DIV'); // changed by Abhishek
+    , SPAN = document.createElement('DIV');
   /*****************************************/
   DIV.className = 'relative';
   SPAN.className = 'colHeader';
 
   this.wt.wtDom.fastInnerHTML(SPAN, this.instance.getColHeader(col));
   DIV.appendChild(SPAN);
-  // changed by Abhishek
+  // WB change - added block
   /*****************************************/
   if (isScroll == 0) {
       while (TH.firstChild) {
           TH.removeChild(TH.firstChild); //empty TH node
       }
-
-<<<<<<< HEAD
+  }
+  /*****************************************/
   this.wt.wtDom.empty(TH);
   TH.appendChild(DIV);
   this.instance.PluginHooks.run('afterGetColHeader', col, TH);
@@ -3967,12 +3451,6 @@ Handsontable.TableView.prototype.maximumVisibleElementHeight = function (top) {
     return rootHeight;
   }
   return rootHeight - top;
-=======
-      TH.appendChild(DIV);
-  }
-  /*****************************************/
-  Handsontable.PluginHooks.run(this.instance, 'afterGetColHeader', col, TH);
->>>>>>> origin/AgChanges2
 };
 
 /**
@@ -4103,8 +3581,8 @@ Handsontable.TableView.prototype.maximumVisibleElementHeight = function (top) {
                   if (that.isEditorOpened() && !activeEditor.isWaiting()){
                     that.closeEditorAndSaveChanges(ctrlDown);
                   }
-
-                  moveSelectionUp(event.shiftKey);
+                  // WB change - added ctrlKey and rangeModifier
+                  moveSelectionUp(event.shiftKey, event.ctrlKey, rangeModifier);
 
                   event.preventDefault();
                   event.stopPropagation(); //required by HandsontableEditor
@@ -4115,7 +3593,8 @@ Handsontable.TableView.prototype.maximumVisibleElementHeight = function (top) {
                     that.closeEditorAndSaveChanges(ctrlDown);
                   }
 
-                  moveSelectionDown(event.shiftKey);
+                  // WB change - added ctrlKey and rangeModifier
+                  moveSelectionDown(event.shiftKey, event.ctrlKey, rangeModifier);
 
                   event.preventDefault();
                   event.stopPropagation(); //required by HandsontableEditor
@@ -4126,7 +3605,8 @@ Handsontable.TableView.prototype.maximumVisibleElementHeight = function (top) {
                     that.closeEditorAndSaveChanges(ctrlDown);
                   }
 
-                  moveSelectionRight(event.shiftKey);
+                  // WB change - added ctrlKey and rangeModifier
+                  moveSelectionRight(event.shiftKey, event.ctrlKey, rangeModifier);
 
                   event.preventDefault();
                   event.stopPropagation(); //required by HandsontableEditor
@@ -4137,7 +3617,8 @@ Handsontable.TableView.prototype.maximumVisibleElementHeight = function (top) {
                     that.closeEditorAndSaveChanges(ctrlDown);
                   }
 
-                  moveSelectionLeft(event.shiftKey);
+                  // WB change - added ctrlKey and rangeModifier
+                  moveSelectionLeft(event.shiftKey, event.ctrlKey, rangeModifier);
 
                   event.preventDefault();
                   event.stopPropagation(); //required by HandsontableEditor
@@ -4220,7 +3701,12 @@ Handsontable.TableView.prototype.maximumVisibleElementHeight = function (top) {
                   break;
 
                 case keyCodes.PAGE_UP:
-                  selection.transformStart(-instance.countVisibleRows(), 0);
+                  // WB change - was selection.transformStart(-instance.countVisibleRows(), 0);
+                  if (event.shiftKey) {
+                    selection.transformEnd(-instance.countVisibleRows(), 0); //expanding selection up with shift
+                  } else {
+                    selection.transformStart(-instance.countVisibleRows(), 0); // move selection up
+                  }
                   instance.view.wt.scrollVertical(-instance.countVisibleRows());
                   instance.view.render();
                   event.preventDefault(); //don't page up the window
@@ -4228,7 +3714,12 @@ Handsontable.TableView.prototype.maximumVisibleElementHeight = function (top) {
                   break;
 
                 case keyCodes.PAGE_DOWN:
-                  selection.transformStart(instance.countVisibleRows(), 0);
+                  // WB change - was selection.transformStart(instance.countVisibleRows(), 0);
+                  if (event.shiftKey) {
+                    selection.transformEnd(instance.countVisibleRows(), 0); //expanding selection down with shift
+                  } else {
+                    selection.transformStart(instance.countVisibleRows(), 0); //move selection down
+                  }
                   instance.view.wt.scrollVertical(instance.countVisibleRows());
                   instance.view.render();
                   event.preventDefault(); //don't page down the window
@@ -4266,40 +3757,88 @@ Handsontable.TableView.prototype.maximumVisibleElementHeight = function (top) {
         }
       }
 
-      function moveSelectionUp(shiftKey){
-        if (shiftKey) {
-          selection.transformEnd(-1, 0);
-        }
-        else {
-          selection.transformStart(-1, 0);
-        }
-      }
-
-      function moveSelectionDown(shiftKey){
-        if (shiftKey) {
-          selection.transformEnd(1, 0); //expanding selection down with shift
-        }
-        else {
-          selection.transformStart(1, 0); //move selection down
-        }
-      }
-
-      function moveSelectionRight(shiftKey){
-        if (shiftKey) {
-          selection.transformEnd(0, 1);
-        }
-        else {
-          selection.transformStart(0, 1);
+      // WB change - added if(ctrlkey)
+      function moveSelectionUp(shiftKey, ctrlKey, rangeModifier){
+        if (ctrlKey) {
+          rangeModifier({ row: 0, col: priv.selStart.col() });
+        } else if (shiftKey) {
+          if (selectkey == 1) {
+            selectkey = 0;
+            selection.transformEnd(-self.countRows(), 0);
+          } else {
+            selection.transformEnd(-1, 0);
+          }
+        } else {
+          if (selectkey == 1) {
+            selectkey = 0;
+            selection.transformStart(-self.countRows(), 0);
+          } else {
+            selection.transformStart(-1, 0);
+          }
         }
       }
 
-      function moveSelectionLeft(shiftKey){
-        if (shiftKey) {
-          selection.transformEnd(0, -1);
+      // WB change - added if(ctrlkey)
+      function moveSelectionDown(shiftKey, ctrlKey, rangeModifier) {
+        if (ctrlKey) {
+          rangeModifier({ row: self.countRows() - 2, col: priv.selStart.col() });
+        } else if (shiftKey) {
+          if (selectkey == 1) {
+            selectkey = 0;
+            selection.transformEnd(self.countRows(), 0); //expanding selection down with shift
+          } else {
+            selection.transformEnd(1, 0); //expanding selection down with shift
+          }
+        } else {
+          if (selectkey == 1) {
+            selectkey = 0;
+            selection.transformStart(self.countRows(), 0); //move selection down
+          } else {
+            selection.transformStart(1, 0); //move selection down
+          }
         }
-        else {
-          selection.transformStart(0, -1);
+      }
+
+      // WB change - added if(ctrlkey)
+      function moveSelectionRight(shiftKey, ctrlKey, rangeModifier) {
+        if (ctrlKey) {
+          rangeModifier({ row: priv.selStart.row(), col: self.countCols() - 1 });
+        } else if (shiftKey) {
+          if (selectkey == 1) {
+            selectkey = 0;
+            selection.transformEnd(0, self.countCols() - 1);
+          } else {
+            selection.transformEnd(0, 1);
+          }
+        } else {
+          if (selectkey == 1) {
+            selectkey = 0;
+            selection.transformStart(0, self.countCols() - 1);
+          } else {
+            selection.transformStart(0, 1);
+          }
         }
+      }
+
+      // WB change - added if(ctrlkey)
+      function moveSelectionLeft(shiftKey, ctrlKey, rangeModifier) {
+        if (ctrlKey) {
+          rangeModifier({ row: 0, col: priv.selStart.col() });
+        } else if (shiftKey) {
+          if (selectkey == 1) {
+            selectkey = 0;
+            selection.transformEnd(0, -self.countCols());
+          } else {
+            selection.transformEnd(0, -1);
+          }
+        } else {
+          if (selectkey == 1) {
+            selectkey = 0;
+            selection.transformStart(0, -self.countCols());
+          } else {
+            selection.transformStart(0, -1);
+          }
+        }        
       }
     };
 
@@ -4824,6 +4363,8 @@ Handsontable.helper.cellMethodLookupFactory = function (methodName) {
 
         var type;
 
+        debugger; // WB change - why doesn't this get called when table is first drawn? It does in orig HoT. Also when it gets here, it is only on 1st level of getPrototypeOfs - orig HoT is 3rd.
+        
         if(typeof properties.type != 'string' ){
           throw new Error('Cell type must be a string ');
         }
@@ -4890,7 +4431,6 @@ Handsontable.SelectionPoint.prototype.arr = function (arr) {
   }
   return [this._row, this._col]
 };
-<<<<<<< HEAD
 (function (Handsontable) {
   'use strict';
 
@@ -4901,61 +4441,10 @@ Handsontable.SelectionPoint.prototype.arr = function (arr) {
     if (cellProperties.readOnly) {
       instance.view.wt.wtDom.addClass(TD, cellProperties.readOnlyCellClassName);
     }
-=======
-/**
- * Default text renderer
- * @param {Object} instance Handsontable instance
- * @param {Element} TD Table cell where to render
- * @param {Number} row
- * @param {Number} col
- * @param {String|Number} prop Row object property name
- * @param value Value to render (remember to escape unsafe HTML before inserting to DOM!)
- * @param {Object} cellProperties Cell properites (shared by cell renderer and editor)
- */
-Handsontable.TextRenderer = function (instance, TD, row, col, prop, value, cellProperties) {
-  var escaped = Handsontable.helper.stringify(value);
-  if (escaped.match(/\n/)) {
-    escaped = escaped.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); //escape html special chars
-    TD.innerHTML = escaped.replace(/\n/g, '<br/>');
-  }
-  else {
-    instance.view.wt.wtDom.empty(TD); //TODO identify under what circumstances this line can be removed
-    TD.appendChild(document.createTextNode(escaped));
-    //this is faster than innerHTML. See: https://github.com/warpech/jquery-handsontable/wiki/JavaScript-&-DOM-performance-tips
-  }
-  // changed by Abhishek
-  /*****************************************/
-  PopupStarter(TD); // Popup bind code
-  /*****************************************/
-};
-/**
- * Autocomplete renderer
- * @param {Object} instance Handsontable instance
- * @param {Element} TD Table cell where to render
- * @param {Number} row
- * @param {Number} col
- * @param {String|Number} prop Row object property name
- * @param value Value to render (remember to escape unsafe HTML before inserting to DOM!)
- * @param {Object} cellProperties Cell properites (shared by cell renderer and editor)
- */
-Handsontable.AutocompleteRenderer = function (instance, TD, row, col, prop, value, cellProperties) {
-  var TEXT = document.createElement('DIV');
-  TEXT.className = 'htAutocomplete';
 
-  var ARROW = document.createElement('DIV');
-  ARROW.className = 'htAutocompleteArrow';
-  ARROW.appendChild(document.createTextNode('\u25BC'));
-  //this is faster than innerHTML. See: https://github.com/warpech/jquery-handsontable/wiki/JavaScript-&-DOM-performance-tips
-
-  if (!instance.acArrowListener) {
-    //not very elegant but easy and fast
-    instance.acArrowListener = function () {
-      instance.view.wt.getSetting('onCellDblClick');
-    };
-    instance.rootElement.on('mouseup', '.htAutocompleteArrow', instance.acArrowListener); //this way we don't bind event listener to each arrow. We rely on propagation instead
-  }
->>>>>>> origin/AgChanges2
-
+    // WB change - added line
+    PopupStarter(TD);
+    
     if (cellProperties.valid === false && cellProperties.invalidCellClassName) {
       instance.view.wt.wtDom.addClass(TD, cellProperties.invalidCellClassName);
     }
@@ -4981,18 +4470,19 @@ Handsontable.AutocompleteRenderer = function (instance, TD, row, col, prop, valu
 
   var TextRenderer = function (instance, TD, row, col, prop, value, cellProperties) {
 
-<<<<<<< HEAD
     Handsontable.renderers.cellDecorator.apply(this, arguments);
-=======
+
+  // WB change - added block
+  //****************
   var INPUT = document.createElement('INPUT');
   INPUT.className = 'htCheckboxRendererInput';
   INPUT.type = 'checkbox';
   INPUT.setAttribute('autocomplete', 'off');
-    //        if (isChecked) {
-    //            $("#checkall").prop("checked", true);
-    //            value = true;
-    //        }
->>>>>>> origin/AgChanges2
+  //        if (isChecked) {
+  //            $("#checkall").prop("checked", true);
+  //            value = true;
+  //        }
+  //****************
 
     if (!value && cellProperties.placeholder) {
       value = cellProperties.placeholder;
@@ -5019,7 +4509,14 @@ Handsontable.AutocompleteRenderer = function (instance, TD, row, col, prop, valu
   Handsontable.renderers.TextRenderer = TextRenderer;
   Handsontable.renderers.registerRenderer('text', TextRenderer);
 
-<<<<<<< HEAD
+  // WB change - added block
+  //***************
+  if (isChecked) {
+      $("#checkall").prop("checked", true);
+  }
+  //return TD; // caused error opening table
+  //***************
+
 })(Handsontable);
 (function (Handsontable) {
 
@@ -5079,26 +4576,6 @@ Handsontable.AutocompleteRenderer = function (instance, TD, row, col, prop, valu
   Handsontable.renderers.AutocompleteRenderer = AutocompleteRenderer;
   Handsontable.renderers.registerRenderer('autocomplete', AutocompleteRenderer);
 })(Handsontable);
-=======
-  /*if (countrow > 0 && countrow != indexList.length) {
-  $("#checkall").prop("indeterminate", true);
-  // isChecked = false;
-  }
-  else if (countrow == 0) {
-  $("#checkall").prop("checked", false);
-  // isChecked = false;
-  }
-  else if (countrow == indexList.length) {
-  $("#checkall").prop("indeterminate", false);
-  $("#checkall").prop("checked", true);
-  // isChecked = true;
-  }*/
-  if (isChecked) {
-      $("#checkall").prop("checked", true);
-  }
-  return TD;
-};
->>>>>>> origin/AgChanges2
 /**
  * Checkbox renderer
  * @param {Object} instance Handsontable instance
@@ -5167,21 +4644,10 @@ Handsontable.AutocompleteRenderer = function (instance, TD, row, col, prop, valu
           instance.setDataAtRowProp(row, prop, cellProperties.checkedTemplate);
         }
         else {
-<<<<<<< HEAD
-          instance.setDataAtRowProp(row, prop, cellProperties.uncheckedTemplate);
+          // WB change - commented line out
+          //instance.setDataAtRowProp(row, prop, cellProperties.uncheckedTemplate);
         }
       });
-=======
-          /*
-          that.beginEditing(row, col, prop, true); //show edit field
-          */ //Changed by Abhishek
-        }
-        /*
-        event.preventDefault(); //prevent new line at the end of textarea
-        event.stopImmediatePropagation();
-        */ // Changed by Abhishek
-      }
->>>>>>> origin/AgChanges2
     }
 
     if(!instance.CheckboxRenderer || !instance.CheckboxRenderer.beforeKeyDownHookBound){
@@ -5862,7 +5328,6 @@ Handsontable.AutocompleteRenderer = function (instance, TD, row, col, prop, valu
 (function (Handsontable) {
   "use strict";
 
-<<<<<<< HEAD
   var HandsontableEditor = Handsontable.editors.TextEditor.prototype.extend();
 
   HandsontableEditor.prototype.createElements = function () {
@@ -5892,37 +5357,6 @@ Handsontable.AutocompleteRenderer = function (instance, TD, row, col, prop, valu
       cells: function () {
         return {
           readOnly: true
-=======
-  this.afterInit = function () {
-    var instance = this;
-    // changed by Abhishek
-    /*****************************************/
-    SearchboxEvent(); // Searchbox keypress event
-    /*****************************************/
-    if (this.getSettings().columnSorting) {
-      this.sortIndex = [];
-      /*****************************************/
-      this.rootElement.on('click.handsontable', '.MySorter', function (e) {
-      /*****************************************/
-        var $target = $(e.target);
-        // changed by Abhishek
-        /*****************************************/
-        if ($target.is('.MySorter')) {
-          /*****************************************/
-          var col = $target.closest('th').index();
-          if (instance.getSettings().rowHeaders) {
-            col--;
-          }
-          if (instance.sortColumn === col) {
-            instance.sortOrder = !instance.sortOrder;
-          }
-          else {
-            instance.sortColumn = col;
-            instance.sortOrder = true;
-          }
-          plugin.sort.call(instance);
-          instance.render();
->>>>>>> origin/AgChanges2
         }
       },
       fillHandle: false,
@@ -5991,46 +5425,11 @@ Handsontable.AutocompleteRenderer = function (instance, TD, row, col, prop, valu
 
         innerHOT.selectCell(rowToSelect, 0);
       }
-<<<<<<< HEAD
-=======
-      // changed by Abhishek
-      /*****************************************/
-      var test = a[1].toString();
-      var test1 = b[1].toString();
-
-      if (a[1] < b[1]) {
-          if (test.indexOf("filtercolumn") > 0)
-              return -1;
-          return instance.sortOrder ? -1 : 1;
-      } else if (a[1] > b[1]) {
-          if (test.indexOf("filtercolumn") > 0)
-              return -1;
-          return instance.sortOrder ? 1 : -1;
-      } else {
-          return -1;
-      }
-      /*****************************************/
-      return 0;
-    });
-    sortingEnabled = true;
-  };
->>>>>>> origin/AgChanges2
 
       event.preventDefault();
       event.stopImmediatePropagation();
     }
 
-<<<<<<< HEAD
-=======
-  this.getColHeader = function (col, TH) {
-    if (this.getSettings().columnSorting) {
-      $(TH).find('DIV.colHeader')[0].className += ' columnSorting';
-      // changed by Abhishek
-      /*****************************************/
-      SorterImageChange(col);
-      /*****************************************/
-    }
->>>>>>> origin/AgChanges2
   };
 
   HandsontableEditor.prototype.open = function () {
@@ -6223,7 +5622,6 @@ Handsontable.AutocompleteRenderer = function (instance, TD, row, col, prop, valu
 
       var choices;
 
-<<<<<<< HEAD
       if(!query || this.cellProperties.filter === false){
         choices = this.cellProperties.source;
       } else {
@@ -6239,26 +5637,6 @@ Handsontable.AutocompleteRenderer = function (instance, TD, row, col, prop, valu
 
     } else {
       this.updateChoicesList([]);
-=======
-  this.getColWidth = function (col, response) {
-    if (this.getSettings().manualColumnResize && this.manualColumnWidths[col]) {
-      response.width = this.manualColumnWidths[col];
-      var width;
-      width = response.width;
-      if (width > 200) width = 200;
-      if ($("#filtercolumn" + col).width() > width) {
-          $("#filtercolumn" + col).css("width", width - 20);
-          $("#filtercolumn" + 2).css("margin-left", 8);
-      } else {
-
-          if (width < 180) {
-              $("#filtercolumn" + col).css("width", width - 20);
-              $("#filtercolumn" + 2).css("margin-left", 4);
-          } else {
-              $("#filtercolumn" + col).css("width", width - 20);
-          }
-      }
->>>>>>> origin/AgChanges2
     }
 
   };
@@ -7923,17 +7301,6 @@ Handsontable.PluginHooks = new Handsontable.PluginHookClass();
       if (!tmp.container) {
         createTmpContainer.call(tmp, instance);
       }
-<<<<<<< HEAD
-=======
-    } else if (cell.TD && cell.TD.nodeName === 'TH') {
-        if (that.instance.hasSetting('onCellMouseDown')) {
-            that.instance.getSetting('onCellMouseDown', event, cell.coords, cell.TD);
-      }
-    }
-    else if (that.wtDom.hasClass(event.target, 'corner')) {
-      that.instance.getSetting('onCellCornerMouseDown', event, event.target);
-    }
->>>>>>> origin/AgChanges2
 
       tmp.container.className = instance.rootElement[0].className + ' htAutoColumnSize';
       tmp.table.className = instance.$table[0].className;
@@ -7982,7 +7349,6 @@ Handsontable.PluginHooks = new Handsontable.PluginHookClass();
         }
       }
 
-<<<<<<< HEAD
       var parent = instance.rootElement[0].parentNode;
       parent.appendChild(tmp.container);
       var width = instance.view.wt.wtDom.outerWidth(tmp.table);
@@ -7993,61 +7359,6 @@ Handsontable.PluginHooks = new Handsontable.PluginHookClass();
         if (width > maxWidth) {
           width = maxWidth;
         }
-=======
-  var precolumn = '';
-  var prerow = '';
-  var onMouseUp = function (event) {
-    if (event.button !== 2) { //if not right mouse button
-      var cell = that.parentCell(event.target);
-
-      if (cell.TD && cell.TD.nodeName === 'TD') {
-        dblClickOrigin.shift();
-        dblClickOrigin.push(cell.TD);
-      } else if (cell.TD && cell.TD.nodeName === 'TH') {
-          if (event.shiftKey) {
-              //  alert(cell.coords[1]);
-              if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
-                  SelectColumnByDrag(precolumn, cell.coords[1], '#leftside');
-              } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
-                  SelectColumnByDrag(precolumn, cell.coords[1], '#rightside1');
-              } else {
-                  if (precolumn != -1)
-                      SelectColumnByDrag(precolumn, cell.coords[1], '#RenderedTable');
-                  else {
-                      if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
-                      } else {
-                          SelectRowByDrag(prerow, cell.coords[0], '#RenderedTable');
-                      }
-                  }
-              }
-
-          } else {
-              precolumn = cell.coords[1];
-              prerow = cell.coords[0];
-              if (Tracker == 1)
-                  Tracker = 0;
-              if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
-
-                  SelectColumn(precolumn, '#leftside');
-              } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
-                  SelectColumn(precolumn, '#rightside1');
-              } else {
-                  if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
-                      SelectAllColumn();
-                  } else {
-                      if (precolumn != -1) {
-                          SelectColumn(precolumn, '#RenderedTable');
-                      } else {
-                          SelectRow(cell.coords[0], '#RenderedTable');
-                      }
-                  }
-              }
-          }
-      }
-      else {
-        dblClickOrigin.shift();
-        dblClickOrigin.push(event.target);
->>>>>>> origin/AgChanges2
       }
 
       return width;
@@ -8119,6 +7430,10 @@ function HandsontableColumnSorting() {
 
   this.init = function (source) {
     var instance = this;
+
+    // WB change - added line
+    SearchboxEvent(); // Searchbox keypress event
+
     var sortingSettings = instance.getSettings().columnSorting;
     var sortingColumn, sortingOrder;
 
@@ -8127,18 +7442,7 @@ function HandsontableColumnSorting() {
     if (instance.sortingEnabled) {
       instance.sortIndex = [];
 
-<<<<<<< HEAD
       var loadedSortingState = loadSortingState.call(instance);
-=======
-WalkontableScroll.prototype.scrollVertical = function (delta) {
-  // changed by Abhishek
-  /*****************************************/
-  isScroll = 1;
-  /*****************************************/
-  if (!this.instance.drawn) {
-    throw new Error('scrollVertical can only be called after table was drawn to DOM');
-  }
->>>>>>> origin/AgChanges2
 
       if (typeof loadedSortingState != 'undefined') {
         sortingColumn = loadedSortingState.sortColumn;
@@ -8204,19 +7508,8 @@ WalkontableScroll.prototype.scrollVertical = function (delta) {
 
     instance.PluginHooks.run('beforeColumnSort', instance.sortColumn, instance.sortOrder);
 
-<<<<<<< HEAD
     plugin.sort.call(instance);
     instance.render();
-=======
-WalkontableScroll.prototype.scrollHorizontal = function (delta) {
-  // changed by Abhishek
-  /*****************************************/
-  isScroll = 0;
-  /*****************************************/
-  if (!this.instance.drawn) {
-    throw new Error('scrollHorizontal can only be called after table was drawn to DOM');
-  }
->>>>>>> origin/AgChanges2
 
     saveSortingState.call(instance);
 
@@ -8236,21 +7529,9 @@ WalkontableScroll.prototype.scrollHorizontal = function (delta) {
       sortingState.sortOrder = instance.sortOrder;
     }
 
-<<<<<<< HEAD
     if (sortingState.hasOwnProperty('sortColumn') || sortingState.hasOwnProperty('sortOrder')) {
       instance.PluginHooks.run('persistentStateSave', 'columnSorting', sortingState);
     }
-=======
-  // changed by Abhishek
-  /*****************************************/
-  TextBoxHide(newOffset);
-  /*****************************************/
-  if (newOffset !== offset) {
-    instance.update('offsetColumn', newOffset);
-  }
-  return instance;
-};
->>>>>>> origin/AgChanges2
 
   };
 
@@ -8265,8 +7546,11 @@ WalkontableScroll.prototype.scrollHorizontal = function (delta) {
   var bindColumnSortingAfterClick = function () {
     var instance = this;
 
-    instance.rootElement.on('click.handsontable', '.columnSorting', function (e) {
-      if (instance.view.wt.wtDom.hasClass(e.target, 'columnSorting')) {
+    // WB change - .MySorter was .columnSorting
+    //*********************
+    instance.rootElement.on('click.handsontable', '.MySorter', function (e) {
+      if (instance.view.wt.wtDom.hasClass(e.target, 'MySorter')) {
+        //*********************
         var col = getColumn(e.target);
         plugin.sortByColumn.call(instance, col);
       }
@@ -8303,8 +7587,22 @@ WalkontableScroll.prototype.scrollHorizontal = function (delta) {
       if (b[1] === null) {
         return -1;
       }
-      if (a[1] < b[1]) return sortOrder ? -1 : 1;
-      if (a[1] > b[1]) return sortOrder ? 1 : -1;
+      // WB change - replaced with block if (a[1] < b[1]) return sortOrder ? -1 : 1; if (a[1] > b[1]) return sortOrder ? 1 : -1;
+      /*****************************************/
+      var test = a[1].toString();
+      var test1 = b[1].toString();
+      if (a[1] < b[1]) {
+        if (test.indexOf("filtercolumn") > 0)
+          return -1;
+        return instance.sortOrder ? -1 : 1;
+      } else if (a[1] > b[1]) {
+        if (test.indexOf("filtercolumn") > 0)
+          return -1;
+        return instance.sortOrder ? 1 : -1;
+      } else {
+        return -1;
+      }
+      /*****************************************/
       return 0;
     }
   }
@@ -8324,19 +7622,8 @@ WalkontableScroll.prototype.scrollHorizontal = function (delta) {
       var aDate = new Date(a[1]);
       var bDate = new Date(b[1]);
 
-<<<<<<< HEAD
       if (aDate < bDate) return sortOrder ? -1 : 1;
       if (aDate > bDate) return sortOrder ? 1 : -1;
-=======
-  /*
-  if (coords[0] < 0 || coords[0] > totalRows - 1) {
-    throw new Error('row ' + coords[0] + ' does not exist');
-  }
-  else if (coords[1] < 0 || coords[1] > totalColumns - 1) {
-    throw new Error('column ' + coords[1] + ' does not exist');
-  }
-  */
->>>>>>> origin/AgChanges2
 
       return 0;
     }
@@ -8406,6 +7693,8 @@ WalkontableScroll.prototype.scrollHorizontal = function (delta) {
   this.getColHeader = function (col, TH) {
     if (this.getSettings().columnSorting) {
       this.view.wt.wtDom.addClass(TH.querySelector('.colHeader'), 'columnSorting');
+      // WB change - added line
+      SorterImageChange(col);
     }
   };
 
@@ -8426,32 +7715,14 @@ WalkontableScroll.prototype.scrollHorizontal = function (delta) {
         instance.sortIndex[i][0] += amount;
       }
     }
+    // WB change - added surrounding if
     if (document.getElementById("filtert").rows[0].cells[3] != undefined) {
+      for(var i=0; i < amount; i++){
+        instance.sortIndex.splice(index+i, 0, [index+i, instance.getData()[index+i][instance.sortColumn + instance.colOffset()]]);
+      }
 
-<<<<<<< HEAD
-    for(var i=0; i < amount; i++){
-      instance.sortIndex.splice(index+i, 0, [index+i, instance.getData()[index+i][instance.sortColumn + instance.colOffset()]]);
-=======
-        if (document.getElementById("filtert").rows[0].cells[3].innerHTML.indexOf("current") == -1 && document.getElementById("filtert").rows[0].cells[3].innerHTML.indexOf("Proposed") == -1) {
-            sliderSize = tableHeight - 65 - 2; //2 is sliders border-width
-            this.sliderStyle.top = this.$table.position().top + 65 + 'px';
-            this.sliderStyle.left = tableWidth - 1 + 'px'; //1 is sliders border-width
-            this.sliderStyle.height = sliderSize + 'px';
-        } else {
-            sliderSize = tableHeight - 54 - 2; //2 is sliders border-width
-            this.sliderStyle.top = this.$table.position().top + 54 + 'px';
-            this.sliderStyle.left = tableWidth - 1 + 'px'; //1 is sliders border-width
-            this.sliderStyle.height = sliderSize + 'px';
-        }
+
     }
-  }
-  else { //horizontal
-    if (this.instance.wtTable.isLastColumnIncomplete()) {
-      visibleCount--;
->>>>>>> origin/AgChanges2
-    }
-
-
 
     saveSortingState.call(instance);
 
@@ -8908,31 +8179,15 @@ Handsontable.PluginHooks.add('afterGetColHeader', htSortColumn.getColHeader);
       }
     }
 
-<<<<<<< HEAD
     return items;
-=======
-WalkontableTable.prototype.isCellVisible = function (r, c, TD) {
-  var out = 0
-    , cellOffset = this.wtDom.offset(TD)
-    , tableOffset = this.tableOffset
-    , innerOffsetTop = cellOffset.top - tableOffset.top
-    , $td = $(TD)
-    , height = $td.innerHeight()
-    , tableHeight = this.instance.hasSetting('height') ? this.instance.getSetting('height') : Infinity;
->>>>>>> origin/AgChanges2
 
   };
 
-<<<<<<< HEAD
   ContextMenu.prototype.updateOptions = function(newOptions){
     newOptions = newOptions || {};
-=======
-  // changed by Abhishek
-  /*****************************************/
-  GanntTableRowHeight(r, $td, height);
-  /*****************************************/
->>>>>>> origin/AgChanges2
-
+    // WB change - added line - need to fix
+    GanntTableRowHeight(r, $td, height);
+  
     if(newOptions.items){
       for(var itemName in newOptions.items){
         var item = {};
@@ -9498,6 +8753,23 @@ function HandsontableManualColumnResize() {
   this.getColWidth = function (col, response) {
     if (this.getSettings().manualColumnResize && this.manualColumnWidths[col]) {
       response.width = this.manualColumnWidths[col];
+      // WB change - added block
+      //*******************
+      var width;
+      width = response.width;
+      if (width > 200) width = 200;
+      if ($("#filtercolumn" + col).width() > width) {
+        $("#filtercolumn" + col).css("width", width - 20);
+        $("#filtercolumn" + 2).css("margin-left", 8);
+      } else {
+        if (width < 180) {
+          $("#filtercolumn" + col).css("width", width - 20);
+          $("#filtercolumn" + 2).css("margin-left", 4);
+        } else {
+          $("#filtercolumn" + col).css("width", width - 20);
+        }
+      }
+      //*******************
     }
   };
 }
@@ -9671,6 +8943,161 @@ Handsontable.PluginHooks.add('afterGetColWidth', htManualColumnResize.getColWidt
     instance.addHook('afterChange', function(changes, source){
       if(source != 'loadData'){
         afterTableAlter.call(this);
+        // WB change - added block
+        /*****************************************/
+        if (changes != null) {
+          var checknew = 1;
+          for (var i = 0; i < $("#RenderedTable").handsontable("getData").length; i++) {
+            checknew = 1;
+            for (var j = 0; j < idList.length; j++) {
+              if ($("#RenderedTable").handsontable("getData")[i]['Id'] == idList[j]) {
+                checknew = 0;
+                if ($("#RenderedTable").handsontable("getData")[i]['Name'] != undefined)
+                  riskNameList[j] = $("#RenderedTable").handsontable("getData")[i]['Name'];
+                else
+                  riskNameList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['Category'] != undefined)
+                  categoryList[j] = $("#RenderedTable").handsontable("getData")[i]['Category'];
+                else
+                  categoryList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['Causes'] != undefined)
+                  CausesList[j] = $("#RenderedTable").handsontable("getData")[i]['Causes'];
+                else
+                  CausesList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['Effects'] != undefined)
+                  EffectsList[j] = $("#RenderedTable").handsontable("getData")[i]['Effects'];
+                else
+                  EffectsList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['PlannedMitigation'] != undefined)
+                  PlannedMitigationList[j] = $("#RenderedTable").handsontable("getData")[i]['PlannedMitigation'];
+                else
+                  PlannedMitigationList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['ProbabilityScore'] != undefined)
+                  ProbabilityScoreList[j] = $("#RenderedTable").handsontable("getData")[i]['ProbabilityScore'];
+                else
+                  ProbabilityScoreList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['ScheduleImpactScore'] != undefined)
+                  ScheduleImpactScoreList[j] = $("#RenderedTable").handsontable("getData")[i]['ScheduleImpactScore'];
+                else
+                  ScheduleImpactScoreList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['Scorecurrent'] != undefined)
+                  ScorecurrentList[j] = $("#RenderedTable").handsontable("getData")[i]['Scorecurrent'];
+                else
+                  ScorecurrentList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['ProposedMitigation'] != undefined)
+                  ProposedMitigationList[j] = $("#RenderedTable").handsontable("getData")[i]['ProposedMitigation'];
+                else
+                  ProposedMitigationList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['ProbabilityScorePost'] != undefined)
+                  ProbabilityScorePostList[j] = $("#RenderedTable").handsontable("getData")[i]['ProbabilityScorePost'];
+                else
+                  ProbabilityScorePostList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['ScheduleImpactScorePost'] != undefined)
+                  ScheduleImpactScorePostList[j] = $("#RenderedTable").handsontable("getData")[i]['ScheduleImpactScorePost'];
+                else
+                  ScheduleImpactScorePostList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['ScorePost'] != undefined)
+                  ScorePostList[j] = $("#RenderedTable").handsontable("getData")[i]['ScorePost'];
+                else
+                  ScorePostList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['Owner'] != undefined)
+                  OwnerList[j] = $("#RenderedTable").handsontable("getData")[i]['Owner'];
+                else
+                  OwnerList[j] = "";
+                break;
+              }
+            }
+            if (checknew == 1) {
+              if (idList.length > 0) {
+                var jsonlength = $("#RenderedTable").handsontable("getData").length;
+                debugger;
+                //$("#RenderedTable").handsontable("getData")[jsonlength - 2]['Id'] = idList[idList.length - 1];
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Name'] == null) {
+                  riskNameList[idList.length - 1] = " ";
+                } else {
+                  riskNameList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Name'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Category'] == null) {
+                  categoryList[idList.length - 1] = " ";
+                } else {
+                  categoryList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Category'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Causes'] == null) {
+                  CausesList[idList.length - 1] = " ";
+                } else {
+                  CausesList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Causes'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Effects'] == null) {
+                  EffectsList[idList.length - 1] = " ";
+                } else {
+                  EffectsList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Effects'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['PlannedMitigation'] == null) {
+                  PlannedMitigationList[idList.length - 1] = " ";
+                } else {
+                  PlannedMitigationList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['PlannedMitigation'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProbabilityScore'] == null) {
+                  ProbabilityScoreList[idList.length - 1] = " ";
+                } else {
+                  ProbabilityScoreList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProbabilityScore'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScheduleImpactScore'] == null) {
+                  ScheduleImpactScoreList[idList.length - 1] = " ";
+                } else {
+                  ScheduleImpactScoreList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScheduleImpactScore'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Scorecurrent'] == null) {
+                  ScorecurrentList[idList.length - 1] = " ";
+                } else {
+                  ScorecurrentList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Scorecurrent'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProposedMitigation'] == null) {
+                  ProposedMitigationList[idList.length - 1] = " ";
+                } else {
+                  ProposedMitigationList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProposedMitigation'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProbabilityScorePost'] == null) {
+                  ProbabilityScorePostList[idList.length - 1] = " ";
+                } else {
+                  ProbabilityScorePostList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProbabilityScorePost'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScheduleImpactScorePost'] == null) {
+                  ScheduleImpactScorePostList[idList.length - 1] = " ";
+                } else {
+                  ScheduleImpactScorePostList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScheduleImpactScorePost'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScorePost'] == null) {
+                  ScorePostList[idList.length - 1] = " ";
+                } else {
+                  ScorePostList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScorePost'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Owner'] == null) {
+                  OwnerList[idList.length - 1] = " ";
+                } else {
+                  OwnerList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Owner'];
+                }
+              }
+            }
+
+          }
+
+          // json_text = JSON.stringify($("#RenderedTable").handsontable("getData"));
+          // alert(json_text);
+          if (changes[0][1] == "isActive") {
+
+            var id = jQuery.parseJSON(json_text)[changes[0][0]]['Id'];
+            if (id != " ") {
+              for (var tempCount = 0; tempCount < idList.length; tempCount++) {
+                if (idList[tempCount] == id) {
+                  indexList[tempCount] = changes[0][3];
+                }
+              }
+            }
+            displayCheckedRisk();
+          }
+        }
+        /*****************************************/      
       }
     });
   }
@@ -11732,7 +11159,12 @@ function WalkontableEvent(instance) {
         that.instance.getSetting('onCellMouseDown', event, cell.coords, cell.TD);
       }
     }
-
+    //WB change - added block - try fix
+    //else if (cell.TD && cell.TD.nodeName === 'TH') {
+    //  if (that.instance.hasSetting('onCellMouseDown')) {
+    //    that.instance.getSetting('onCellMouseDown', event, cell.coords, cell.TD);
+    //  }
+    //}
     if (event.button !== 2) { //if not right mouse button
       if (cell.TD && cell.TD.nodeName === 'TD') {
         dblClickOrigin[0] = cell.TD;
@@ -11758,7 +11190,7 @@ function WalkontableEvent(instance) {
     }
   };
 
-/*  var lastMouseOut;
+  var lastMouseOut;
   var onMouseOut = function (event) {
     if (that.instance.hasSetting('onCellMouseOut')) {
       var TABLE = that.instance.wtTable.TABLE;
@@ -11770,8 +11202,13 @@ function WalkontableEvent(instance) {
         }
       }
     }
-  };*/
+  };
 
+  // WB change - added 2 lines
+  //************************
+  var precolumn = '';
+  var prerow = '';
+  //************************
   var onMouseUp = function (event) {
     if (event.button !== 2) { //if not right mouse button
       var cell = that.parentCell(event.target);
@@ -11794,12 +11231,57 @@ function WalkontableEvent(instance) {
           dblClickOrigin[1] = null;
         }, 500);
       }
+      // WB change - added block, need to put in
+      //************************
+      /*
+       } else if (cell.TD && cell.TD.nodeName === 'TH') {
+          if (event.shiftKey) {
+              //  alert(cell.coords[1]);
+              if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
+                  SelectColumnByDrag(precolumn, cell.coords[1], '#leftside');
+              } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
+                  SelectColumnByDrag(precolumn, cell.coords[1], '#rightside1');
+              } else {
+                  if (precolumn != -1)
+                      SelectColumnByDrag(precolumn, cell.coords[1], '#RenderedTable');
+                  else {
+                      if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
+                      } else {
+                          SelectRowByDrag(prerow, cell.coords[0], '#RenderedTable');
+                      }
+                  }
+              }
+
+          } else {
+              precolumn = cell.coords[1];
+              prerow = cell.coords[0];
+              if (Tracker == 1)
+                  Tracker = 0;
+              if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
+
+                  SelectColumn(precolumn, '#leftside');
+              } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
+                  SelectColumn(precolumn, '#rightside1');
+              } else {
+                  if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
+                      SelectAllColumn();
+                  } else {
+                      if (precolumn != -1) {
+                          SelectColumn(precolumn, '#RenderedTable');
+                      } else {
+                          SelectRow(cell.coords[0], '#RenderedTable');
+                      }
+                  }
+              }
+          }
+      */
+      //************************
     }
   };
 
   $(this.instance.wtTable.holder).on('mousedown', onMouseDown);
   $(this.instance.wtTable.TABLE).on('mouseover', onMouseOver);
-//  $(this.instance.wtTable.TABLE).on('mouseout', onMouseOut);
+  $(this.instance.wtTable.TABLE).on('mouseout', onMouseOut);
   $(this.instance.wtTable.holder).on('mouseup', onMouseUp);
 }
 
@@ -11980,6 +11462,9 @@ function WalkontableScroll(instance) {
 }
 
 WalkontableScroll.prototype.scrollVertical = function (delta) {
+  // WB change - added line
+  isScroll = 1;
+
   if (!this.instance.drawn) {
     throw new Error('scrollVertical can only be called after table was drawn to DOM');
   }
@@ -12015,6 +11500,8 @@ WalkontableScroll.prototype.scrollVertical = function (delta) {
 
 WalkontableScroll.prototype.scrollHorizontal = function (delta) {
   if (!this.instance.drawn) {
+    // WB change - added line
+    isScroll = 0;
     throw new Error('scrollHorizontal can only be called after table was drawn to DOM');
   }
 
@@ -12038,6 +11525,8 @@ WalkontableScroll.prototype.scrollHorizontal = function (delta) {
   else {
     newOffset = 0;
   }
+  // WB change - added line
+  TextBoxHide(newOffset);
 
   if (newOffset !== offset) {
     this.instance.wtScrollbars.horizontal.scrollTo(newOffset);
@@ -13824,7 +13313,6 @@ WalkontableTable.prototype.isLastColumnFullyVisible = function () {
 
 function WalkontableViewport(instance) {
   this.instance = instance;
-<<<<<<< HEAD
   this.resetSettings();
 
   if (this.instance.getSetting('nativeScrollbars')) {
@@ -13990,6 +13478,9 @@ function WalkontableWheel(instance) {
 
   //spreader === instance.wtTable.TABLE.parentNode
   $(instance.wtTable.spreader).on('mousewheel', function (event, delta, deltaX, deltaY) {
+    // WB change - added line
+    isScroll = 1;
+
     if (!deltaX && !deltaY && delta) { //we are in IE8, see https://github.com/brandonaaron/jquery-mousewheel/issues/53
       deltaY = delta;
     }
@@ -14014,15 +13505,6 @@ function WalkontableWheel(instance) {
     //now we are sure we really want to scroll
     clearTimeout(instance.wheelTimeout);
     instance.wheelTimeout = setTimeout(function () { //timeout is needed because with fast-wheel scrolling mousewheel event comes dozen times per second
-=======
-  $(this.instance.wtTable.TABLE).on('mousewheel', function (event, delta, deltaX, deltaY) {
-    // changed by Abhishek
-    /*****************************************/
-    isScroll = 1;
-    /*****************************************/
-    clearTimeout(that.instance.wheelTimeout);
-    that.instance.wheelTimeout = setTimeout(function () { //timeout is needed because with fast-wheel scrolling mousewheel event comes dozen times per second
->>>>>>> origin/AgChanges2
       if (deltaY) {
         //ceil is needed because jquery-mousewheel reports fractional mousewheel deltas on touchpad scroll
         //see http://stackoverflow.com/questions/5527601/normalizing-mousewheel-speed-across-browsers
