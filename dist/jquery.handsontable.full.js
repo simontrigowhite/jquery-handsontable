@@ -1942,13 +1942,13 @@ Handsontable.Core = function (rootElement, userSettings) {
     }
   };
 
-  // WB change - add block - try fix
+  // WB change - add block
   /*****************************************/
-  //this.getSelectedcellrow = function () { //https://github.com/warpech/jquery-handsontable/issues/44  //cjl  
-  //    var coords = grid.getCornerCoords([priv.selStart.coords(), priv.selEnd.coords()]);
-  //    return [coords.TL.row, coords.TL.col, coords.BR.row, coords.BR.col];
+  this.getSelectedcellrow = function () { //https://github.com/warpech/jquery-handsontable/issues/44  //cjl  
+      var coords = grid.getCornerCoords([priv.selStart.coords(), priv.selEnd.coords()]);
+      return [coords.TL.row, coords.TL.col, coords.BR.row, coords.BR.col];
 
-  //};
+  };
   /*****************************************/
     
   /**
@@ -4363,8 +4363,6 @@ Handsontable.helper.cellMethodLookupFactory = function (methodName) {
 
         var type;
 
-        debugger; // WB change - why doesn't this get called when table is first drawn? It does in orig HoT. Also when it gets here, it is only on 1st level of getPrototypeOfs - orig HoT is 3rd.
-        
         if(typeof properties.type != 'string' ){
           throw new Error('Cell type must be a string ');
         }
@@ -4620,7 +4618,8 @@ Handsontable.SelectionPoint.prototype.arr = function (arr) {
       TD.appendChild(INPUT);
     }
     else {
-      instance.view.wt.wtDom.fastInnerText(TD, '#bad value#'); //this is faster than innerHTML. See: https://github.com/warpech/jquery-handsontable/wiki/JavaScript-&-DOM-performance-tips
+      // WB change - commented line out
+      //instance.view.wt.wtDom.fastInnerText(TD, '#bad value#'); //this is faster than innerHTML. See: https://github.com/warpech/jquery-handsontable/wiki/JavaScript-&-DOM-performance-tips
     }
 
     var $input = $(INPUT);
@@ -7194,6 +7193,7 @@ Handsontable.PluginHookClass = (function () {
       //Make a copy of handler array
       var handlers = Array.prototype.slice.call(this.hooks[key]);
 
+      //debugger;
       for (var i = 0, leni = handlers.length; i < leni; i++) {
         handlers[i].call(instance, p1, p2, p3, p4, p5);
 
@@ -7431,6 +7431,8 @@ function HandsontableColumnSorting() {
   this.init = function (source) {
     var instance = this;
 
+    //debugger; // comes here exponentially more times
+
     // WB change - added line
     SearchboxEvent(); // Searchbox keypress event
 
@@ -7552,7 +7554,12 @@ function HandsontableColumnSorting() {
       if (instance.view.wt.wtDom.hasClass(e.target, 'MySorter')) {
         //*********************
         var col = getColumn(e.target);
-        plugin.sortByColumn.call(instance, col);
+        // WB change - add if statement
+        //*********************
+        if (col != null) {
+          //*********************
+          plugin.sortByColumn.call(instance, col);
+        }
       }
     });
 
@@ -7563,6 +7570,12 @@ function HandsontableColumnSorting() {
 
     function getColumn(target) {
       var TH = instance.view.wt.wtDom.closest(target, 'TH');
+      // WB change - add block
+      //*********************
+      if (TH == null) {
+        return null;
+      }
+      //*********************
       return instance.view.wt.wtDom.index(TH) - countRowHeaders();
     }
   };
@@ -7594,11 +7607,11 @@ function HandsontableColumnSorting() {
       if (a[1] < b[1]) {
         if (test.indexOf("filtercolumn") > 0)
           return -1;
-        return instance.sortOrder ? -1 : 1;
+        return sortOrder ? -1 : 1;
       } else if (a[1] > b[1]) {
         if (test.indexOf("filtercolumn") > 0)
           return -1;
-        return instance.sortOrder ? 1 : -1;
+        return sortOrder ? 1 : -1;
       } else {
         return -1;
       }
@@ -8185,7 +8198,7 @@ Handsontable.PluginHooks.add('afterGetColHeader', htSortColumn.getColHeader);
 
   ContextMenu.prototype.updateOptions = function(newOptions){
     newOptions = newOptions || {};
-    // WB change - added line - need to fix
+    // WB change - added line
     GanntTableRowHeight(r, $td, height);
   
     if(newOptions.items){
@@ -8945,6 +8958,11 @@ Handsontable.PluginHooks.add('afterGetColWidth', htManualColumnResize.getColWidt
         afterTableAlter.call(this);
         // WB change - added block
         /*****************************************/
+        
+        // Sets riskNameList, categoryList, ..., ownerList
+        // then calls displayCheckedRisk
+
+        // alert('sing'); // SW: doesn't get here when checkbox is deselected (unless you press Alt!)
         if (changes != null) {
           var checknew = 1;
           for (var i = 0; i < $("#RenderedTable").handsontable("getData").length; i++) {
@@ -9010,7 +9028,7 @@ Handsontable.PluginHooks.add('afterGetColWidth', htManualColumnResize.getColWidt
             if (checknew == 1) {
               if (idList.length > 0) {
                 var jsonlength = $("#RenderedTable").handsontable("getData").length;
-                debugger;
+                //debugger;
                 //$("#RenderedTable").handsontable("getData")[jsonlength - 2]['Id'] = idList[idList.length - 1];
                 if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Name'] == null) {
                   riskNameList[idList.length - 1] = " ";
@@ -11160,11 +11178,11 @@ function WalkontableEvent(instance) {
       }
     }
     //WB change - added block - try fix
-    //else if (cell.TD && cell.TD.nodeName === 'TH') {
-    //  if (that.instance.hasSetting('onCellMouseDown')) {
-    //    that.instance.getSetting('onCellMouseDown', event, cell.coords, cell.TD);
-    //  }
-    //}
+    else if (cell.TD && cell.TD.nodeName === 'TH') {
+      if (that.instance.hasSetting('onCellMouseDown')) {
+        that.instance.getSetting('onCellMouseDown', event, cell.coords, cell.TD);
+      }
+    }
     if (event.button !== 2) { //if not right mouse button
       if (cell.TD && cell.TD.nodeName === 'TD') {
         dblClickOrigin[0] = cell.TD;
@@ -11230,51 +11248,53 @@ function WalkontableEvent(instance) {
         dblClickTimeout[1] = setTimeout(function () {
           dblClickOrigin[1] = null;
         }, 500);
-      }
+
+      //}
       // WB change - added block, need to put in
       //************************
-      /*
-       } else if (cell.TD && cell.TD.nodeName === 'TH') {
-          if (event.shiftKey) {
-              //  alert(cell.coords[1]);
-              if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
-                  SelectColumnByDrag(precolumn, cell.coords[1], '#leftside');
-              } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
-                  SelectColumnByDrag(precolumn, cell.coords[1], '#rightside1');
-              } else {
-                  if (precolumn != -1)
-                      SelectColumnByDrag(precolumn, cell.coords[1], '#RenderedTable');
-                  else {
-                      if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
-                      } else {
-                          SelectRowByDrag(prerow, cell.coords[0], '#RenderedTable');
-                      }
-                  }
-              }
-
+      } else if (cell.TD && cell.TD.nodeName === 'TH') {
+        debugger;
+        if (event.shiftKey) {
+          //  alert(cell.coords[1]);
+          if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
+            SelectColumnByDrag(precolumn, cell.coords[1], '#leftside');
+          } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
+            SelectColumnByDrag(precolumn, cell.coords[1], '#rightside1');
           } else {
-              precolumn = cell.coords[1];
-              prerow = cell.coords[0];
-              if (Tracker == 1)
-                  Tracker = 0;
-              if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
-
-                  SelectColumn(precolumn, '#leftside');
-              } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
-                  SelectColumn(precolumn, '#rightside1');
+            if (precolumn != -1)
+              SelectColumnByDrag(precolumn, cell.coords[1], '#RenderedTable');
+            else {
+              if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
               } else {
-                  if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
-                      SelectAllColumn();
-                  } else {
-                      if (precolumn != -1) {
-                          SelectColumn(precolumn, '#RenderedTable');
-                      } else {
-                          SelectRow(cell.coords[0], '#RenderedTable');
-                      }
-                  }
+                SelectRowByDrag(prerow, cell.coords[0], '#RenderedTable');
               }
+            }
           }
-      */
+
+        } else {
+          debugger;
+          precolumn = cell.coords[1];
+          prerow = cell.coords[0];
+          if (Tracker == 1)
+            Tracker = 0;
+          if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
+
+            SelectColumn(precolumn, '#leftside');
+          } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
+            SelectColumn(precolumn, '#rightside1');
+          } else {
+            if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
+              SelectAllColumn();
+            } else {
+              if (precolumn != -1) {
+                SelectColumn(precolumn, '#RenderedTable');
+              } else {
+                SelectRow(cell.coords[0], '#RenderedTable');
+              }
+            }
+          }
+        }
+      }
       //************************
     }
   };

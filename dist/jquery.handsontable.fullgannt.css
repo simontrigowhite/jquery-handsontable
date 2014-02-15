@@ -61,10 +61,11 @@
   width: 50px;
 }
 
-.handsontable th {
+.handsontable th { /* WB change - was th and td */
   border-right: 1px solid #CCC;
   border-bottom: 1px solid #CCC;
-  height: 43px;
+  height: 43px; /* WB change - was 22px */
+  /* WB change - removed empty-cells: show; */
   line-height: 21px;
   padding: 0 4px 0 4px;
   /* top, bottom padding different than 0 is handled poorly by FF with HTML5 doctype */
@@ -82,6 +83,8 @@
   background-color: #ff4c42;
 }
 
+/* WB change - added block */
+/* ========================*/
 .handsontable td {
   border-right: 1px solid #CCC;
   border-bottom: 1px solid #CCC;
@@ -95,6 +98,7 @@
   white-space: pre-line;
   /* preserve new line character in cell */
 }
+/* ========================*/
 
 .handsontable th:last-child {
   /*Foundation framework fix*/
