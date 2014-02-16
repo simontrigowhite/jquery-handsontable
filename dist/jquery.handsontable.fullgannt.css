@@ -64,7 +64,7 @@
 .handsontable th { /* WB change - was th and td */
   border-right: 1px solid #CCC;
   border-bottom: 1px solid #CCC;
-  height: 43px; /* WB change - was 22px */
+  height: 43px; /* WB change (fullgannt only) - was 22px */
   /* WB change - removed empty-cells: show; */
   line-height: 21px;
   padding: 0 4px 0 4px;
