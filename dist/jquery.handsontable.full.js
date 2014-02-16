@@ -11370,52 +11370,52 @@ function WalkontableEvent(instance) {
           dblClickOrigin[1] = null;
         }, 500);
 
-      //}
-      // WB change - added block, need to put in
-      //************************
-      } else if (cell.TD && cell.TD.nodeName === 'TH') {
-        debugger;
-        if (event.shiftKey) {
-          //  alert(cell.coords[1]);
-          if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
-            SelectColumnByDrag(precolumn, cell.coords[1], '#leftside');
-          } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
-            SelectColumnByDrag(precolumn, cell.coords[1], '#rightside1');
-          } else {
-            if (precolumn != -1)
-              SelectColumnByDrag(precolumn, cell.coords[1], '#RenderedTable');
-            else {
-              if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
-              } else {
-                SelectRowByDrag(prerow, cell.coords[0], '#RenderedTable');
-              }
-            }
-          }
-
-        } else {
-          debugger;
-          precolumn = cell.coords[1];
-          prerow = cell.coords[0];
-          if (Tracker == 1)
-            Tracker = 0;
-          if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
-
-            SelectColumn(precolumn, '#leftside');
-          } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
-            SelectColumn(precolumn, '#rightside1');
-          } else {
-            if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
-              SelectAllColumn();
-            } else {
-              if (precolumn != -1) {
-                SelectColumn(precolumn, '#RenderedTable');
-              } else {
-                SelectRow(cell.coords[0], '#RenderedTable');
-              }
-            }
-          }
-        }
       }
+      // WB change - added block, need to put back in (and remove previous closing brace)
+      //************************
+      //} else if (cell.TD && cell.TD.nodeName === 'TH') {
+      //  debugger;
+      //  if (event.shiftKey) {
+      //    //  alert(cell.coords[1]);
+      //    if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
+      //      SelectColumnByDrag(precolumn, cell.coords[1], '#leftside');
+      //    } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
+      //      SelectColumnByDrag(precolumn, cell.coords[1], '#rightside1');
+      //    } else {
+      //      if (precolumn != -1)
+      //        SelectColumnByDrag(precolumn, cell.coords[1], '#RenderedTable');
+      //      else {
+      //        if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
+      //        } else {
+      //          SelectRowByDrag(prerow, cell.coords[0], '#RenderedTable');
+      //        }
+      //      }
+      //    }
+
+      //  } else {
+      //    debugger;
+      //    precolumn = cell.coords[1];
+      //    prerow = cell.coords[0];
+      //    if (Tracker == 1)
+      //      Tracker = 0;
+      //    if (cell.TD.innerHTML.search("ID") > 0 || cell.TD.innerHTML.search("Duration") > 0 || cell.TD.innerHTML.search("Start Date") > 0 || cell.TD.innerHTML.search("End Date") > 0 || cell.TD.innerHTML.search('rel="1"') > 0 && cell.TD.innerHTML.search("P50") == -1 && cell.TD.innerHTML.search("Category") == -1) {
+
+      //      SelectColumn(precolumn, '#leftside');
+      //    } else if (cell.TD.innerHTML.search("P10") > 0 || cell.TD.innerHTML.search("P50") > 0 || cell.TD.innerHTML.search("P90") > 0) {
+      //      SelectColumn(precolumn, '#rightside1');
+      //    } else {
+      //      if (precolumn == -1 && cell.TD.innerHTML.trim() == "") {
+      //        SelectAllColumn();
+      //      } else {
+      //        if (precolumn != -1) {
+      //          SelectColumn(precolumn, '#RenderedTable');
+      //        } else {
+      //          SelectRow(cell.coords[0], '#RenderedTable');
+      //        }
+      //      }
+      //    }
+      //  }
+      //}
       //************************
     }
   };
