@@ -39,6 +39,7 @@ var categoryList = new Array();
 var CausesList = new Array();
 var EffectsList = new Array();
 var PlannedMitigationList = new Array();
+var ExposureList = new Array();
 var ProbabilityScoreList = new Array();
 var ScheduleImpactScoreList = new Array();
 var ScorecurrentList = new Array();
@@ -50,7 +51,7 @@ var OwnerList = new Array();
 var countrow = 0;
 var SelectedRisk = "";
 var isChecked;
-var filterbox = "", filterbox1 = "", filterbox2 = "", filterbox3 = "", filterbox4 = "", filterbox5 = "", filterbox6 = "", filterbox7 = "", filterbox8 = "", filterbox9 = "", filterbox10 = "", filterbox11 = "", filterbox12 = "", filterbox13 = "";
+var filterbox = "", filterbox1 = "", filterbox2 = "", filterbox3 = "", filterbox4 = "", filterbox5 = "", filterbox6 = "", filterbox7 = "", filterbox8 = "", filterbox9 = "", filterbox10 = "", filterbox11 = "", filterbox12 = "", filterbox13 = "", filterbox14 = "";
 /*****************************************/
 
 var Handsontable = { //class namespace
@@ -9101,6 +9102,10 @@ Handsontable.PluginHooks.add('afterGetColWidth', htManualColumnResize.getColWidt
                   PlannedMitigationList[j] = $("#RenderedTable").handsontable("getData")[i]['PlannedMitigation'];
                 else
                   PlannedMitigationList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['Exposure'] != undefined)
+                  ExposureList[j] = $("#RenderedTable").handsontable("getData")[i]['Exposure'];
+                else
+                  ExposureList[j] = "";
                 if ($("#RenderedTable").handsontable("getData")[i]['ProbabilityScore'] != undefined)
                   ProbabilityScoreList[j] = $("#RenderedTable").handsontable("getData")[i]['ProbabilityScore'];
                 else
@@ -9165,6 +9170,11 @@ Handsontable.PluginHooks.add('afterGetColWidth', htManualColumnResize.getColWidt
                   PlannedMitigationList[idList.length - 1] = " ";
                 } else {
                   PlannedMitigationList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['PlannedMitigation'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Exposure'] == null) {
+                  ExposureList[idList.length - 1] = " ";
+                } else {
+                  ExposureList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Exposure'];
                 }
                 if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProbabilityScore'] == null) {
                   ProbabilityScoreList[idList.length - 1] = " ";
@@ -11422,7 +11432,7 @@ function WalkontableEvent(instance) {
 
   $(this.instance.wtTable.holder).on('mousedown', onMouseDown);
   $(this.instance.wtTable.TABLE).on('mouseover', onMouseOver);
-  $(this.instance.wtTable.TABLE).on('mouseout', onMouseOut);
+//  $(this.instance.wtTable.TABLE).on('mouseout', onMouseOut);
   $(this.instance.wtTable.holder).on('mouseup', onMouseUp);
 }
 
