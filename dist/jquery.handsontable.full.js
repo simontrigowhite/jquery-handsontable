@@ -13,13 +13,9 @@
 // WB change - add block
 /*****************************************/
 var selectkey = 0;
-var ispopup = 0;
 var isScroll = 0;
-var PopupData;
 var currenttd;
 var firstload = 0;
-var probabillity;
-var schedule;
 var probabilitypost;
 var schedulepost;
 var divToPrint;
@@ -39,14 +35,15 @@ var categoryList = new Array();
 var CausesList = new Array();
 var EffectsList = new Array();
 var PlannedMitigationList = new Array();
-var ExposureList = new Array();
 var ProbabilityScoreList = new Array();
 var ScheduleImpactScoreList = new Array();
 var ScorecurrentList = new Array();
+var ExposureList = new Array();
 var ProposedMitigationList = new Array();
 var ProbabilityScorePostList = new Array();
 var ScheduleImpactScorePostList = new Array();
 var ScorePostList = new Array();
+var ExposurePostList = new Array();
 var OwnerList = new Array();
 var countrow = 0;
 var SelectedRisk = "";
@@ -7540,8 +7537,6 @@ function HandsontableColumnSorting() {
   this.init = function (source) {
     var instance = this;
 
-    //debugger; // comes here exponentially more times
-
     // WB change - added line
     SearchboxEvent(); // Searchbox keypress event
 
@@ -7564,13 +7559,13 @@ function HandsontableColumnSorting() {
       }
       plugin.sortByColumn.call(instance, sortingColumn, sortingOrder);
 
-      instance.sort = function(){
+      instance.sort = function() {
         var args = Array.prototype.slice.call(arguments);
 
         return plugin.sortByColumn.apply(instance, args)
       };
 
-      if (typeof instance.getSettings().observeChanges == 'undefined'){
+      if (typeof instance.getSettings().observeChanges == 'undefined') {
         enableObserveChangesPlugin.call(instance);
       }
 
@@ -7659,7 +7654,8 @@ function HandsontableColumnSorting() {
 
     // WB change - .MySorter was .columnSorting
     //*********************
-    instance.rootElement.on('click.handsontable', '.MySorter', function (e) {
+    instance.rootElement.on('click.handsontable', '.MySorter', function MySorterClick(e) {
+      //debugger;
       if (instance.view.wt.wtDom.hasClass(e.target, 'MySorter')) {
         //*********************
         var col = getColumn(e.target);
@@ -7689,7 +7685,7 @@ function HandsontableColumnSorting() {
     }
   };
 
-  function enableObserveChangesPlugin () {
+  function enableObserveChangesPlugin() {
     var instance = this;
     instance.registerTimeout('enableObserveChanges', function(){
       instance.updateSettings({
@@ -7711,23 +7707,88 @@ function HandsontableColumnSorting() {
       }
       // WB change - replaced with block if (a[1] < b[1]) return sortOrder ? -1 : 1; if (a[1] > b[1]) return sortOrder ? 1 : -1;
       /*****************************************/
-      var test = a[1].toString();
-      var test1 = b[1].toString();
-      if (a[1] < b[1]) {
-        if (test.indexOf("filtercolumn") > 0)
-          return -1;
+      var aToSort = GetToSort(a[1]);
+      var bToSort = GetToSort(b[1]);
+
+      if (aToSort)
+        aToSort = aToSort.toLowerCase();
+
+      if (bToSort)
+        bToSort = bToSort.toLowerCase();
+
+      if (aToSort < bToSort) {
         return sortOrder ? -1 : 1;
-      } else if (a[1] > b[1]) {
-        if (test.indexOf("filtercolumn") > 0)
-          return -1;
+      } else if (aToSort > bToSort) {
         return sortOrder ? 1 : -1;
-      } else {
-        return -1;
       }
       /*****************************************/
+      
       return 0;
     }
   }
+
+  // WB CHANGE
+  /*****************************************/
+  function CleanUpText(text) {
+    var cleanText = "";
+    for (var i = 0; i < text.length; i++) {
+      var c = text.substring(i, i + 1);
+      if (c.charCodeAt(0) != 163 && c != "m")
+        cleanText += c;
+    }
+    return cleanText;
+  }
+
+  function GetToSort(text) {
+
+    var cleanText = CleanUpText(text);
+    var prefixDigits = 0;
+    if (cleanText.length == 1)
+      prefixDigits = 1;
+    else {
+      for (var i = 1; i < cleanText.length + 1; i++) {
+        var prefix = cleanText.substring(0, i);
+        var num = Number(prefix);
+        if (num.toString() == prefix) {
+          prefixDigits = i + 1;
+        }
+      }
+    }
+    // todo - make it only sort numbers separated by space from rest of text
+    if (prefixDigits == 0) {
+      // no initial num
+      return text;
+    } else if (prefixDigits >= cleanText.length) {
+      // all num
+      return AddLeadingZeros(Number(cleanText));
+    } else {
+      // part num
+      return AddLeadingZeros(cleanText.substring(0, prefixDigits)) + cleanText.substring(prefixDigits, text.length);
+    }
+  }
+
+  function AddLeadingZeros(numberString) {
+    var number = Number(numberString);
+    // todo - make handle bigger numbers and negative numbers
+    if (number < 10)
+      return "00000" + numberString.toString();
+
+    if (number < 100)
+      return "0000" + numberString.toString();
+
+    if (number < 1000)
+      return "000" + numberString.toString();
+
+    if (number < 10000)
+      return "00" + numberString.toString();
+
+    if (number < 100000)
+      return "0" + numberString.toString();
+
+    else
+      return numberString.toString();
+  }
+  /*****************************************/
 
   function dateSort(sortOrder) {
     return function (a, b) {
@@ -9102,10 +9163,6 @@ Handsontable.PluginHooks.add('afterGetColWidth', htManualColumnResize.getColWidt
                   PlannedMitigationList[j] = $("#RenderedTable").handsontable("getData")[i]['PlannedMitigation'];
                 else
                   PlannedMitigationList[j] = "";
-                if ($("#RenderedTable").handsontable("getData")[i]['Exposure'] != undefined)
-                  ExposureList[j] = $("#RenderedTable").handsontable("getData")[i]['Exposure'];
-                else
-                  ExposureList[j] = "";
                 if ($("#RenderedTable").handsontable("getData")[i]['ProbabilityScore'] != undefined)
                   ProbabilityScoreList[j] = $("#RenderedTable").handsontable("getData")[i]['ProbabilityScore'];
                 else
@@ -9118,6 +9175,10 @@ Handsontable.PluginHooks.add('afterGetColWidth', htManualColumnResize.getColWidt
                   ScorecurrentList[j] = $("#RenderedTable").handsontable("getData")[i]['Scorecurrent'];
                 else
                   ScorecurrentList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['Exposure'] != undefined)
+                  ExposureList[j] = $("#RenderedTable").handsontable("getData")[i]['Exposure'];
+                else
+                  ExposureList[j] = "";
                 if ($("#RenderedTable").handsontable("getData")[i]['ProposedMitigation'] != undefined)
                   ProposedMitigationList[j] = $("#RenderedTable").handsontable("getData")[i]['ProposedMitigation'];
                 else
@@ -9134,6 +9195,10 @@ Handsontable.PluginHooks.add('afterGetColWidth', htManualColumnResize.getColWidt
                   ScorePostList[j] = $("#RenderedTable").handsontable("getData")[i]['ScorePost'];
                 else
                   ScorePostList[j] = "";
+                if ($("#RenderedTable").handsontable("getData")[i]['ExposurePost'] != undefined)
+                  ExposurePostList[j] = $("#RenderedTable").handsontable("getData")[i]['ExposurePost'];
+                else
+                  ExposurePostList[j] = "";
                 if ($("#RenderedTable").handsontable("getData")[i]['Owner'] != undefined)
                   OwnerList[j] = $("#RenderedTable").handsontable("getData")[i]['Owner'];
                 else
@@ -9171,11 +9236,6 @@ Handsontable.PluginHooks.add('afterGetColWidth', htManualColumnResize.getColWidt
                 } else {
                   PlannedMitigationList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['PlannedMitigation'];
                 }
-                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Exposure'] == null) {
-                  ExposureList[idList.length - 1] = " ";
-                } else {
-                  ExposureList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Exposure'];
-                }
                 if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProbabilityScore'] == null) {
                   ProbabilityScoreList[idList.length - 1] = " ";
                 } else {
@@ -9190,6 +9250,11 @@ Handsontable.PluginHooks.add('afterGetColWidth', htManualColumnResize.getColWidt
                   ScorecurrentList[idList.length - 1] = " ";
                 } else {
                   ScorecurrentList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Scorecurrent'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Exposure'] == null) {
+                  ExposureList[idList.length - 1] = " ";
+                } else {
+                  ExposureList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['Exposure'];
                 }
                 if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ProposedMitigation'] == null) {
                   ProposedMitigationList[idList.length - 1] = " ";
@@ -9210,6 +9275,11 @@ Handsontable.PluginHooks.add('afterGetColWidth', htManualColumnResize.getColWidt
                   ScorePostList[idList.length - 1] = " ";
                 } else {
                   ScorePostList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ScorePost'];
+                }
+                if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['ExposurePost'] == null) {
+                  ExposurePostList[idList.length - 1] = " ";
+                } else {
+                  ExposurePostList[idList.length - 1] = $("#RenderedTable").handsontable("getData")[jsonlength - 2]['ExposurePost'];
                 }
                 if ($("#RenderedTable").handsontable("getData")[jsonlength - 2]['Owner'] == null) {
                   OwnerList[idList.length - 1] = " ";
@@ -11309,11 +11379,11 @@ function WalkontableEvent(instance) {
       }
     }
     //WB change - added block - try fix
-    else if (cell.TD && cell.TD.nodeName === 'TH') {
-      if (that.instance.hasSetting('onCellMouseDown')) {
-        that.instance.getSetting('onCellMouseDown', event, cell.coords, cell.TD);
-      }
-    }
+    //else if (cell.TD && cell.TD.nodeName === 'TH') {
+    //  if (that.instance.hasSetting('onCellMouseDown')) {
+    //    that.instance.getSetting('onCellMouseDown', event, cell.coords, cell.TD);
+    //  }
+    //}
     if (event.button !== 2) { //if not right mouse button
       if (cell.TD && cell.TD.nodeName === 'TD') {
         dblClickOrigin[0] = cell.TD;
