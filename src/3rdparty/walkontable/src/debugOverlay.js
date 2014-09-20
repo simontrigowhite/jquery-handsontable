@@ -10,9 +10,9 @@ function WalkontableDebugOverlay(instance) {
   this.clone = this.makeClone('debug');
   this.clone.wtTable.holder.style.opacity = 0.4;
   this.clone.wtTable.holder.style.textShadow = '0 0 2px #ff0000';
+  this.lastTimeout = null;
 
   var that = this;
-  var lastTimeout;
   var lastX = 0;
   var lastY = 0;
   var overlayContainer = that.clone.wtTable.holder.parentNode;
@@ -26,12 +26,12 @@ function WalkontableDebugOverlay(instance) {
     }
     lastX = event.clientX;
     lastY = event.clientY;
-    WalkontableDom.prototype.addClass(overlayContainer, 'wtDebugHidden');
-    WalkontableDom.prototype.removeClass(overlayContainer, 'wtDebugVisible');
-    clearTimeout(lastTimeout);
-    lastTimeout = setTimeout(function () {
-      WalkontableDom.prototype.removeClass(overlayContainer, 'wtDebugHidden');
-      WalkontableDom.prototype.addClass(overlayContainer, 'wtDebugVisible');
+    Handsontable.Dom.addClass(overlayContainer, 'wtDebugHidden');
+    Handsontable.Dom.removeClass(overlayContainer, 'wtDebugVisible');
+    clearTimeout(this.lastTimeout);
+    this.lastTimeout = setTimeout(function () {
+      Handsontable.Dom.removeClass(overlayContainer, 'wtDebugHidden');
+      Handsontable.Dom.addClass(overlayContainer, 'wtDebugVisible');
     }, 1000);
   });
 }
@@ -46,13 +46,6 @@ WalkontableDebugOverlay.prototype.resetFixedPosition = function () {
   var box = this.instance.wtTable.holder.getBoundingClientRect();
   elem.style.top = Math.ceil(box.top, 10) + 'px';
   elem.style.left = Math.ceil(box.left, 10) + 'px';
-};
-
-WalkontableDebugOverlay.prototype.prepare = function () {
-};
-
-WalkontableDebugOverlay.prototype.refresh = function (selectionsOnly) {
-  this.clone && this.clone.draw(selectionsOnly);
 };
 
 WalkontableDebugOverlay.prototype.getScrollPosition = function () {
@@ -71,4 +64,9 @@ WalkontableDebugOverlay.prototype.readWindowSize = function () {
 };
 
 WalkontableDebugOverlay.prototype.readSettings = function () {
+};
+
+WalkontableDebugOverlay.prototype.destroy = function () {
+  WalkontableOverlay.prototype.destroy.call(this);
+  clearTimeout(this.lastTimeout);
 };

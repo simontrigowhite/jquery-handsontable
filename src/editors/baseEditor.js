@@ -89,11 +89,7 @@
       return;
     }
 
-    if (this.cellProperties.readOnly) {
-      return;
-    }
-
-    this.instance.view.scrollViewport({row: this.row, col: this.col});
+    this.instance.view.scrollViewport(new WalkontableCellCoords(this.row, this.col));
     this.instance.view.render();
 
     this.state = Handsontable.EditorState.EDITING;
@@ -128,9 +124,9 @@
 
     if (this.state == Handsontable.EditorState.VIRGIN) {
       var that = this;
-      setTimeout(function () {
+      this.instance._registerTimeout(setTimeout(function () {
         that._fireCallbacks(true);
-      });
+      }, 0));
       return;
     }
 

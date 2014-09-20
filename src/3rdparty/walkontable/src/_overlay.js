@@ -2,9 +2,7 @@
  * Creates an overlay over the original Walkontable instance. The overlay renders the clone of the original Walkontable
  * and (optionally) implements behavior needed for native horizontal and vertical scrolling
  */
-function WalkontableOverlay() {
-  this.maxOuts = 10; //max outs in one direction (before and after table)
-}
+function WalkontableOverlay() {}
 
 /*
  Possible optimizations:
@@ -18,8 +16,6 @@ WalkontableOverlay.prototype.init = function () {
   this.TABLE = this.instance.wtTable.TABLE;
   this.fixed = this.instance.wtTable.hider;
   this.fixedContainer = this.instance.wtTable.holder;
-  this.fixed.style.position = 'absolute';
-  this.fixed.style.left = '0';
   this.scrollHandler = this.getScrollableElement(this.TABLE);
   this.$scrollHandler = $(this.scrollHandler); //in future remove jQuery from here
 };
@@ -27,7 +23,7 @@ WalkontableOverlay.prototype.init = function () {
 WalkontableOverlay.prototype.makeClone = function (direction) {
   var clone = document.createElement('DIV');
   clone.className = 'ht_clone_' + direction + ' handsontable';
-  clone.style.position = 'fixed';
+	clone.style.position = 'absolute';
   clone.style.overflow = 'hidden';
 
   var table2 = document.createElement('TABLE');
@@ -57,17 +53,10 @@ WalkontableOverlay.prototype.getScrollableElement = function (TABLE) {
   return window;
 };
 
-WalkontableOverlay.prototype.prepare = function () {
-};
-
-WalkontableOverlay.prototype.onScroll = function (forcePosition) {
+WalkontableOverlay.prototype.onScroll = function () {
 
   this.windowScrollPosition = this.getScrollPosition();
   this.readSettings(); //read window scroll position
-
-  if (forcePosition) {
-    this.windowScrollPosition = forcePosition;
-  }
 
   this.resetFixedPosition(); //may be redundant
 };
@@ -77,7 +66,7 @@ WalkontableOverlay.prototype.availableSize = function () {
 
   if (this.windowScrollPosition > this.tableParentOffset /*&& last > -1*/) { //last -1 means that viewport is scrolled behind the table
     if (this.instance.wtTable.getLastVisibleRow() === this.total - 1) {
-      availableSize = this.instance.wtDom.outerHeight(this.TABLE);
+      availableSize = Handsontable.Dom.outerHeight(this.TABLE);
     }
     else {
       availableSize = this.windowSize;
@@ -91,20 +80,12 @@ WalkontableOverlay.prototype.availableSize = function () {
 };
 
 WalkontableOverlay.prototype.refresh = function (selectionsOnly) {
-  var last = this.getLastCell();
-  this.measureBefore = this.sumCellSizes(0, this.offset);
-  if (last === -1) { //last -1 means that viewport is scrolled behind the table
-    this.measureAfter = 0;
-  }
-  else {
-    this.measureAfter = this.sumCellSizes(last, this.total - last);
-  }
-  this.applyToDOM();
   this.clone && this.clone.draw(selectionsOnly);
 };
 
 WalkontableOverlay.prototype.destroy = function () {
-  this.$scrollHandler.off('.' + this.instance.guid);
-  $(window).off('.' + this.instance.guid);
-  $(document).off('.' + this.instance.guid);
+  this.$scrollHandler.off('.' + this.clone.guid);
+  $(window).off('.' + this.clone.guid);
+  $(document).off('.' + this.clone.guid);
+  $(document.body).off('.' + this.clone.guid);
 };

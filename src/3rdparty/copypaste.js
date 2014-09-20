@@ -47,15 +47,16 @@ CopyPasteClass.prototype.init = function () {
     this.elDiv.id = 'CopyPasteDiv';
     style = this.elDiv.style;
     style.position = 'fixed';
-    style.top = 0;
-    style.left = 0;
+    style.top = '-10000px';
+    style.left = '-10000px';
     parent.appendChild(this.elDiv);
 
     this.elTextarea = document.createElement('TEXTAREA');
     this.elTextarea.className = 'copyPaste';
     style = this.elTextarea.style;
-    style.width = '1px';
-    style.height = '1px';
+    style.width = '10000px';
+    style.height = '10000px';
+    style.overflow = 'hidden';
     this.elDiv.appendChild(this.elTextarea);
 
     if (typeof style.opacity !== 'undefined') {
@@ -200,6 +201,8 @@ CopyPasteClass.prototype.destroy = function () {
   if(!this.hasBeenDestroyed() && --this.refCounter == 0){
     if (this.elDiv && this.elDiv.parentNode) {
       this.elDiv.parentNode.removeChild(this.elDiv);
+      this.elDiv = null;
+      this.elTextarea = null;
     }
 
     this._unbindEvent(this.listenerElement, 'keydown', this.keydownListener);

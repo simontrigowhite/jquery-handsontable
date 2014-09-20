@@ -2,7 +2,7 @@ describe('CheckboxRenderer', function () {
   var id = 'testContainer';
 
   beforeEach(function () {
-    this.$container = $('<div id="' + id + '"></div>').appendTo('body');
+    this.$container = $('<div id="' + id + '" style="width: 300px; height: 200px;"></div>').appendTo('body');
   });
 
   afterEach(function () {
@@ -110,7 +110,7 @@ describe('CheckboxRenderer', function () {
     expect(checkboxes.eq(2).prop('checked')).toBe(true);
     expect(getData()).toEqual([[false], [true], [true]]);
     expect(afterChangeCallback.calls.length).toEqual(1);
-    expect(afterChangeCallback).toHaveBeenCalledWith([[0, 0, true, false]], 'edit', undefined, undefined, undefined);
+    expect(afterChangeCallback).toHaveBeenCalledWith([[0, 0, true, false]], 'edit', undefined, undefined, undefined, undefined);
 
 
   });
@@ -259,6 +259,72 @@ describe('CheckboxRenderer', function () {
 
     mouseDoubleClick($(getCell(0, 0)));
     expect(getDataAtCell(0, 0)).toBe(false);
+  });
+
+  it("should change checkbox state from checked to unchecked after hitting ENTER", function () {
+    handsontable({
+      data  :  [[true],[true],[true]],
+      columns : [
+        { type: 'checkbox'}
+      ]
+    });
+
+    var afterChangeCallback = jasmine.createSpy('afterChangeCallback');
+    addHook('afterChange', afterChangeCallback);
+
+    var checkboxes = this.$container.find(':checkbox');
+
+    expect(checkboxes.eq(0).prop('checked')).toBe(true);
+    expect(checkboxes.eq(1).prop('checked')).toBe(true);
+    expect(checkboxes.eq(2).prop('checked')).toBe(true);
+    expect(getData()).toEqual([[true], [true], [true]]);
+
+    selectCell(0, 0);
+
+    keyDown('enter');
+
+    expect(checkboxes.eq(0).prop('checked')).toBe(false);
+    expect(checkboxes.eq(1).prop('checked')).toBe(true);
+    expect(checkboxes.eq(2).prop('checked')).toBe(true);
+    expect(getData()).toEqual([[false], [true], [true]]);
+    expect(afterChangeCallback.calls.length).toEqual(1);
+    expect(afterChangeCallback).toHaveBeenCalledWith([[0, 0, true, false]], 'edit', undefined, undefined, undefined, undefined);
+
+  });
+
+  it("should change checkbox state from checked to unchecked after hitting ENTER using custom check/uncheck templates", function () {
+    handsontable({
+      data  :  [['yes'],['yes'],['no']],
+      columns : [
+        {
+          type: 'checkbox',
+          checkedTemplate: 'yes',
+          uncheckedTemplate: 'no'
+        }
+      ]
+    });
+
+    var afterChangeCallback = jasmine.createSpy('afterChangeCallback');
+    addHook('afterChange', afterChangeCallback);
+
+    var checkboxes = this.$container.find(':checkbox');
+
+    expect(checkboxes.eq(0).prop('checked')).toBe(true);
+    expect(checkboxes.eq(1).prop('checked')).toBe(true);
+    expect(checkboxes.eq(2).prop('checked')).toBe(false);
+    expect(getData()).toEqual([['yes'], ['yes'], ['no']]);
+
+    selectCell(0, 0);
+
+    keyDown('enter');
+
+    expect(checkboxes.eq(0).prop('checked')).toBe(false);
+    expect(checkboxes.eq(1).prop('checked')).toBe(true);
+    expect(checkboxes.eq(2).prop('checked')).toBe(false);
+    expect(getData()).toEqual([['no'], ['yes'], ['no']]);
+    expect(afterChangeCallback.calls.length).toEqual(1);
+    expect(afterChangeCallback).toHaveBeenCalledWith([[0, 0, 'yes', 'no']], 'edit', undefined, undefined, undefined, undefined);
+
   });
 
 });
